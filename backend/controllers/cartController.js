@@ -1,19 +1,26 @@
 const Cart = require('../models/Cart'); // Adjust the path as necessary
 const Product = require('../models/Product'); // Adjust the path as necessary
+const { ObjectId } = require('mongoose').Types;
 
 // Function to get the user's cart
-async function getCart(userId) {
+exports.getcart = async (req, res)=> {  
   try {
+  const userId=  req.user._id
     const cart = await Cart.findOne({ user: userId }).populate('items.product');
-    return cart || { items: [], totalPrice: 0 }; // Return an empty cart if none exists
+    res.status(200).json(cart || { items: [], totalPrice: 0 }); // Respond with the cart in JSON format
+
   } catch (error) {
-    throw new Error('Error fetching cart: ' + error.message);
+    res.status(500).json({ message: error.message }); // Respond with error message
   }
 }
 
 // Function to add an item to the cart
-async function addCartItem(userId, productId, quantity) {
-  try {
+exports.addcartItem = async (req, res)=>  {
+  
+  try { 
+     const { productId, quantity } = req.body;
+     const userId=  req.user._id
+
     const cart = await Cart.findOneAndUpdate(
       { user: userId },
       { $addToSet: { items: { product: productId, quantity } } },
@@ -22,27 +29,32 @@ async function addCartItem(userId, productId, quantity) {
 
     // Optionally, you can recalculate the total price here
     await updateTotalPrice(cart);
-    return cart;
+    res.status(200).json(cart); 
   } catch (error) {
-    throw new Error('Error adding item to cart: ' + error.message);
-  }
+    res.status(500).json({ message: error.message });  }
 }
 
 // Function to remove an item from the cart
-async function removeCartItem(userId, productId) {
+exports.removecartItem = async (req, res)=>{
+  const { productId } = req.params;
+  const userId=  req.user._id
+
   try {
+    const validId = new ObjectId(productId);
+    if (!ObjectId.isValid(validId)) {
+      return res.status(400).json({ message: 'Invalid product ID.' });
+    }
     const cart = await Cart.findOneAndUpdate(
       { user: userId },
-      { $pull: { items: { product: productId } } },
+      { $pull: { items: { product: ObjectId(validId) } } },
       { new: true } // Return the updated cart
     );
 
     // Optionally, you can recalculate the total price here
     await updateTotalPrice(cart);
-    return cart;
+    res.status(200).json(cart);
   } catch (error) {
-    throw new Error('Error removing item from cart: ' + error.message);
-  }
+    res.status(500).json({ message: error.message });  }
 }
 
 // Helper function to update the total price of the cart
@@ -56,4 +68,3 @@ async function updateTotalPrice(cart) {
   await cart.save();
 }
 
-module.exports = { getCart, addCartItem, removeCartItem };

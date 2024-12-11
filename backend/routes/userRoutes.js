@@ -1,27 +1,20 @@
 const express = require('express');
+const { registor, login, registorSeller, logout, getsellerprofile, setsellerprofile } = require('../controllers/userController');
+const { isAuthenticatedSeller } = require('../middleware/auth');
+const upload = require('../middleware/multerConfig');
+const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const router = express.Router();
-const app = express();
-// const { registerUser } = require('../controllers/userController');
-// const { loginUser } = require('../controllers/userController');
-const user = require("../controllers/userController");
-const express = require('express');
-const cors = require('cors');
 
-require('dotenv').config();
 
-// Use CORS middleware
-app.use(cors({
- // Replace with your frontend's URL
-    credentials: true,
-  }));
-  
-  // Other middlewares
 
-  app.use(express.json()); // for parsing application/json
+
 
 // Define the POST route for user registration
-// router.post('/register', registerUser);
-// router.post('/login', loginUser);
-app.use("/api/users", user);
+router.post('/register', registor);
+router.post('/login', login);
+router.post("/registerSeller",registorSeller);
+router.get("/logout",catchAsyncErrors(logout));
+router.get("/getsellerprofile",isAuthenticatedSeller,getsellerprofile);
+router.post("/setsellerprofile",isAuthenticatedSeller,upload.single('image'),setsellerprofile);
 
 module.exports = router;

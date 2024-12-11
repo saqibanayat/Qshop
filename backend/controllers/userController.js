@@ -12,67 +12,51 @@ const path = require('path');
 const express = require("express");
 const Product = require('../models/Product');
 const Order = require('../models/Order');
-const multer = require('multer');
+// const multer = require('multer');
 const { getCart, addCartItem ,removeCartItem } = require('./cartController');
 const router = express.Router();
 
-// exports.registerUser = async (req, res) => {
+// exportss.registerUser = async  = async (req, res)=> => {
 
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'images/'); // Specify the directory to save the file
-    },
-    filename: function (req, file, cb) {
-      const baseUrl= "http://127.0.0.1:3000/images/"
-      const name=Date.now()+Math.round(Math.random()*10000)+path.extname(file.originalname)
-      const fileLink=baseUrl+name;
-      if(!Array.isArray(req.body.images))
-        req.body.images=[]
 
-      req.body.images.push(fileLink);
-      req.body.image = fileLink;
-      cb(null,name); // Generate a unique filename
-    }
-  });
 
-  const upload = multer({ storage: storage });
 
-  router.post("/register",registor);
-  router.post("/registerSeller",registorSeller);
-  router.post("/login",login);
-  router.post("/setproduct",isAuthenticatedSeller,upload.array('images', 4),setproduct);
-  router.get("/getproduct",isAuthenticated,getproduct);
-  router.get("/getproductbyid",isAuthenticated,getproductbyid);
-  router.post("/setorder",isAuthenticated,setorder);
-  router.get("/getorderbyseller",isAuthenticatedSeller,getorderbyseller);
+  // router.post("/register",registor);
+  // router.post("/registerSeller",registorSeller);
+  // router.post("/login",login);
+  // router.post("/setproduct",isAuthenticatedSeller,upload.array('images', 4),setproduct);
+  // router.get("/getproduct",isAuthenticated,getproduct);
+  // router.get("/getproductbyid",isAuthenticated,getproductbyid);
+  // router.post("/setorder",isAuthenticated,setorder);
+  // router.get("/getorderbyseller",isAuthenticatedSeller,getorderbyseller);
 
-  router.get("/getorderbyuser",isAuthenticated,getorderbycustomer);
+  // router.get("/getorderbyuser",isAuthenticated,getorderbycustomer);
 
-  router.get("/getsellerprofile",isAuthenticatedSeller,getsellerprofile);
-  router.post("/setsellerprofile",isAuthenticatedSeller,upload.single('image'),setsellerprofile);
+  // router.get("/getsellerprofile",isAuthenticatedSeller,getsellerprofile);
+  // router.post("/setsellerprofile",isAuthenticatedSeller,upload.single('image'),setsellerprofile);
   // load user
-router.get("/getseller",isAuthenticated,catchAsyncErrors(getseller));
+// router.get("/getseller",isAuthenticated,catchAsyncErrors(getseller));
 // log out user
-router.get("/logout",catchAsyncErrors(logout));
+// router.get("/logout",catchAsyncErrors(logout));
 
-router.get("/getcart",isAuthenticated,getcart)
-router.post('/cart/items',isAuthenticated,addcartItem )
+// router.get("/getcart",isAuthenticated,getcart)
+// router.post('/cart/items',isAuthenticated,addcartItem )
 
-router.get('/cart/items/:productId',isAuthenticated,removecartItem) 
+// router.get('/cart/items/:productId',isAuthenticated,removecartItem) 
 
 // Add a favorite product
-router.post('/favorite', isAuthenticated,addFavoriteProduct);
+// router.post('/favorite', isAuthenticated,addFavoriteProduct);
 
 // Get all favorite products for a user
-router.get('/favorite',isAuthenticated,getFavoriteProducts);
-
+// router.get('/favorite',isAuthenticated,getFavoriteProducts);
+// 
 // Remove a favorite product
-router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
+// router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
 
 
 
 
-  async function registor(req, res) {
+  exports.registor = async (req, res) => {
     const { email, password, phone, personalInfo, address } = req.body;
   
     // Validation for required fields
@@ -103,7 +87,7 @@ router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
       res.status(500).send('Server error');
     }
   }
-  async function registorSeller(req, res) {
+  exports.registorSeller = async (req, res)=> {
     const { email, password, phone, personalInfo, address,shopName } = req.body;
   
     // Validation for required fields
@@ -137,7 +121,7 @@ router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
   }
 
 
-  async function login(req, res) {
+  exports.login = async (req, res)=> {
     const { email, password } = req.body;
 
     // Validation for required fields
@@ -187,7 +171,7 @@ router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
 }
 
 
-  async function getseller(req, res, next) {
+ exports.getseller= async (req, res, next)=> {
     try {
       const seller = await Seller.findById(req.seller);
       if (!seller) {
@@ -203,7 +187,7 @@ router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
     }
   }
 
-async function logout(req, res, next) {
+ exports.logout= async (req, res, next)=> {
     try {
       res.cookie("token", null, {
         expires: new Date(Date.now()),
@@ -221,180 +205,10 @@ async function logout(req, res, next) {
   }
   
 
-  async function setproduct(req, res) {
 
-    const { name, description,price,category,quantity, sizes, flavors, colors,images } = req.body;
-    const seller=req.seller;
-    console.log(req.body);
-    // Validation for required fields
-    if (!name || !description ) {
-      return res.status(400).json({ msg: 'Please provide all required fields' });
-    }
-  
-    try {
-  
-  
-      const product = new Product({
-        name,
-        description,
-        category,
-        price,
-        quantity,
-        seller,
-        sizes,
-        flavors,
-        colors,
-        images
-      });
-      await product.save();
 
-      return res.status(200).json({
-        success: true,
-        msg: 'Product publish succussfully'}
-      );
-    } catch (error) {
-      console.error('Server error:', error.message);
-      res.status(500).send('Server error');
-    }
-  }
 
-  async function getproduct(req, res,next) {
-    try {
-      const product = await Product.find();
-
-      if (!product) {
-        return next(new ErrorHandler("Product doesn't exists", 400));
-      }
-
-      res.status(200).json({
-        success: true,
-        product,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-  async function getproductbyid(req, res, next) {
-    try {
-      const product = await Product.findById(req.query.id);
-
-      if (!product) {
-        return next(new ErrorHandler("Product doesn't exists", 400));
-      }
-
-      res.status(200).json({
-        success: true,
-        product,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-
-  async function getorderbyseller(req, res, next)
-  {
-    try {
-      const seller=req.seller;
-      const orders = await Order.find({ seller: seller }).populate('items.product').populate('customer').populate('seller');
-      if (!orders) {
-        return next(new ErrorHandler("Order doesn't exists", 400));
-      }
-
-      res.status(200).json({
-        success: true,
-        orders,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-  async function getorderbycustomer(req, res, next)
-  {
-    try {
-      const user=req.user;
-      const orders = await Order.find({ customer: user }).populate('items.product').populate('customer').populate('seller');
-      if (!orders) {
-        return next(new ErrorHandler("Order doesn't exists", 400));
-      }
-
-      res.status(200).json({
-        success: true,
-        orders,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  }
-  async function setorder(req, res, next)
-  {
-    const { items, address,card,coupon,paymentmethod } = req.body; // Removed card and coupon for simplicity
-    const user=req.user; //req.user;
-    console.log(req.body)
-    if (!items || !address ) {
-      return res.status(400).json({ msg: 'Please provide all required fields' });
-    }
-    
-  // Group items by seller
-  const ordersBySeller = {};
-
-  // Fetch product details for all items in one go
-  const productIds = items.map(item => item._id);
-  const products = await Product.find({ _id: { $in: productIds } });
-
-  // Organize products by seller and prepare the order items
-  for (const item of items) {
-    const { _id, quantity } = item; // Get only id and quantity from item
-    const product = products.find(p => p._id.toString() === _id);
-
-    if (!product) {
-      throw new Error(`Product not found for ID: ${_id}`);
-    }
-
-    const sellerId = product.seller; // Assuming the product has a seller field
-
-    if (!ordersBySeller[sellerId]) {
-      ordersBySeller[sellerId] = [];
-    }
-
-    ordersBySeller[sellerId].push({
-      product: _id,
-      quantity,
-      price: product.price // Get price from product
-    });
-  }
-
-  const orders = [];
-  for (const sellerId in ordersBySeller) {
-    const orderItems = ordersBySeller[sellerId];
-    const totalAmount = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderNumber = generateOrderNumber(); // Implement your logic to generate unique order numbers
-    const shipping=100;
-    const order = new Order({
-      orderNumber,
-      customer: user,
-      seller: sellerId,
-      items: orderItems,
-      totalAmount:totalAmount+shipping,
-      shippingAddress: address,
-    });
-
-    orders.push(order);
-  }
-
-  try {
-    await Order.insertMany(orders);
-    console.log('Orders created successfully:', orders);
-    return res.status(200).json({
-      success: true,
-      msg: 'Order succussfully'}
-    );
-  } catch (error) {
-    console.error('Server error:', error.message);
-    res.status(500).send('Server error');
-  }
-}
-
-async function getsellerprofile(req, res, next) {
+ exports.getsellerprofile= async (req, res, next)=> {
   try {
     const seller =req.seller;
     const sellerprofile = await Seller.findById(seller);
@@ -418,7 +232,7 @@ async function getsellerprofile(req, res, next) {
     return next(new ErrorHandler(error.message, 500));
   }
 }
-async function setsellerprofile(req, res) {
+ exports.setsellerprofile = async (req, res)=> {
   const { firstName,lastName,email, password, phone,image } = req.body;
 const sellerId=req.seller;
   // Validation for required fields
@@ -454,7 +268,7 @@ const sellerId=req.seller;
   }
 }
 
-async function getcart(req, res) {
+ exports.getcart = async (req, res)=> {
   try {
     const cart = await getCart(req.user);
     res.status(200).json(cart); // Respond with the cart in JSON format
@@ -465,7 +279,7 @@ async function getcart(req, res) {
 
 // Route to add an item to the cart
 
-async function addcartItem(req, res)  {
+ exports.addcartItem = async (req, res)=>  {
   const { productId, quantity } = req.body;
 console.log(req.user);
 
@@ -482,7 +296,7 @@ console.log(req.user);
 };
 
 
-async function removecartItem(req, res){
+ exports.removecartItem = async (req, res)=>{
   const { productId } = req.params;
 
   try {
@@ -493,59 +307,6 @@ async function removecartItem(req, res){
   }
 };
 
-// Add a favorite product
-async function addFavoriteProduct(req, res){
-  try {
-    const { productId } = req.body;
-    const user = req.user;
-
-    // Check if the product is already favorited by the user
-    const existingFavorite = await FavoriteProduct.findOne({user, productId });
-
-    if (existingFavorite) {
-      return res.status(400).json({ success: false, message: 'Product already in favorites.' });
-    }
-
-    // Add to favorites
-    const favorite = await FavoriteProduct.create({ user, productId });
-    res.status(201).json({ success: true, data: favorite });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Get all favorite products for a user
-async function getFavoriteProducts(req, res) {
-  try {
-    const { productId } = req.params;
-    const user = req.user;
-
-    // Retrieve all favorites for the user
-    const favorites = await FavoriteProduct.find({ user }).populate('productId');
-    res.status(200).json({ success: true, data: favorites });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Remove a favorite product
-async function removeFavoriteProduct(req, res) {
-  try {
-    const {productId } = req.params;
-    const user = req.user;
-
-    // Remove the product from favorites
-    const removed = await FavoriteProduct.findOneAndDelete({user, productId });
-
-    if (!removed) {
-      return res.status(404).json({ success: false, message: 'Favorite product not found.' });
-    }
-
-    res.status(200).json({ success: true, message: 'Product removed from favorites.' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
 
 
 function generateOrderNumber() {
@@ -554,7 +315,7 @@ function generateOrderNumber() {
 }
 
   
-// exports.loginUser = async (req, res) => {
+// exportss.loginUser = async  = async (req, res)=> => {
 
 
 
@@ -570,4 +331,3 @@ function generateOrderNumber() {
 
 
 
-module.exports = router;

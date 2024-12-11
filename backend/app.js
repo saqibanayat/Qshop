@@ -4,7 +4,10 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const authRouter = require('./routes/userRoutes');
+const productRouter = require('./routes/productRoutes');
+const orderRouter = require('./routes/orderRoutes');
+const favoriteRoute = require('./routes/favoriteRoutes');
 app.use(cors({
   origin: ['http://localhost:3001',],
   credentials: true
@@ -29,7 +32,12 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 const user = require("./controllers/userController");
 
 
-app.use("/api/users", user);
+// app.use("/api/users", user);
+app.use('/api/user',authRouter);
+app.use('/api/product',productRouter);
+app.use('/api/order',orderRouter)
+app.use('/api/favorite',favoriteRoute)
+
 
 
 // it's for ErrorHandling

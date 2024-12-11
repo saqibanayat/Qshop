@@ -6,8 +6,8 @@ const Seller = require("../models/Seller");
 // const Shop = require("../model/shop");
 
 exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
-    const {token} = req.cookies;
-
+    const token =   req.cookies.token || req.headers.authorization?.split(" ")[1];
+   console.log("🚀 ~ exports.isAuthenticatedSeller=catchAsyncErrors ~ token:", token)
     if(!token){
         return next(new ErrorHandler("Please login to continue", 401));
     }
@@ -15,13 +15,14 @@ exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
 
-    req.user = await User.findById(decoded._id);
+    req.user = await User.findById(decoded.id);
 
     next();
 });
 
 exports.isAuthenticatedSeller = catchAsyncErrors(async(req,res,next) => {
-    const {token} = req.cookies;
+    const token =   req.cookies.token || req.headers.authorization?.split(" ")[1];
+ 
 
     if(!token){
         return next(new ErrorHandler("Please login to continue", 401));
@@ -30,24 +31,15 @@ exports.isAuthenticatedSeller = catchAsyncErrors(async(req,res,next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY_SELLER);
     
 
-    req.Seller = await Seller.findById(decoded._id);
-
+    const seller = await Seller.findById(decoded.id);
+    if (!seller) {
+        return next(new ErrorHandler("Seller not found", 404));
+      }
+    
+      req.Seller = seller;
     next();
 });
 
-
-// exports.isSeller = catchAsyncErrors(async(req,res,next) => {
-//     const {seller_token} = req.cookies;
-//     if(!seller_token){
-//         return next(new ErrorHandler("Please login to continue", 401));
-//     }
-
-//     const decoded = jwt.verify(seller_token, process.env.JWT_SECRET_KEY);
-
-//     req.seller = await Shop.findById(decoded.id);
-
-//     next();
-// });
 
 
 exports.isAdmin = (...roles) => {
