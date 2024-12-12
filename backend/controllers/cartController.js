@@ -1,6 +1,6 @@
 const Cart = require('../models/Cart'); // Adjust the path as necessary
 const Product = require('../models/Product'); // Adjust the path as necessary
-const { ObjectId } = require('mongoose').Types;
+// const { ObjectId } = require('mongoose').Types;
 
 // Function to get the user's cart
 exports.getcart = async (req, res)=> {  
@@ -35,27 +35,48 @@ exports.addcartItem = async (req, res)=>  {
 }
 
 // Function to remove an item from the cart
-exports.removecartItem = async (req, res)=>{
-  const { productId } = req.params;
-  const userId=  req.user._id
+exports.removecartItem = async (req, res) => {
+  const { productId, quantity } = req.body; // Get productId and quantity from request body
+  const userId = req.user._id; // Get user ID from request
 
   try {
-    const validId = new ObjectId(productId);
-    if (!ObjectId.isValid(validId)) {
-      return res.status(400).json({ message: 'Invalid product ID.' });
-    }
-    const cart = await Cart.findOneAndUpdate(
-      { user: userId },
-      { $pull: { items: { product: ObjectId(validId) } } },
-      { new: true } // Return the updated cart
-    );
+  
+    // Find the cart
+    const cart = await Cart.findOne({ user: userId });
 
-    // Optionally, you can recalculate the total price here
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found.' });
+    }
+
+    // Find the item in the cart
+    const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Product not found in cart.' });
+    }
+
+    const item = cart.items[itemIndex];
+
+    if (item.quantity > quantity) {
+      // Decrease the quantity
+      cart.items[itemIndex].quantity -= quantity;
+    } else {
+      // Remove the item if quantity to decrease is equal to or exceeds current quantity
+      cart.items.splice(itemIndex, 1);
+    }
+
+    // Recalculate the total price
     await updateTotalPrice(cart);
+
+    // Save the updated cart
+    await cart.save();
+
     res.status(200).json(cart);
   } catch (error) {
-    res.status(500).json({ message: error.message });  }
-}
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 // Helper function to update the total price of the cart
 async function updateTotalPrice(cart) {

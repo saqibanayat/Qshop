@@ -10,5 +10,5 @@ router.get("/getorderbyseller",isAuthenticatedSeller,getorderbyseller);
 router.get("/getorderbyuser",isAuthenticated,getorderbycustomer);
 router.get('/getcart',isAuthenticated,getcart);
 router.post('/addcartitem',isAuthenticated,addcartItem);
-router.delete('/removecartitem',isAuthenticated,removecartItem);
+router.post('/removecartitem',isAuthenticated,removecartItem);
 module.exports = router;

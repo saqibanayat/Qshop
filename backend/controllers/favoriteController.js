@@ -37,11 +37,12 @@ exports.addFavoriteProduct = async (req, res)=>{
   // Remove a favorite product
    exports.removeFavoriteProduct = async (req, res)=> {
     try {
-      const {productId } = req.params;
-      const user = req.user;
+      const {productId } = req.query;
+      const user = req.user._id;
+  console.log('productId',productId, user);
   
       // Remove the product from favorites
-      const removed = await FavoriteProduct.findOneAndDelete({user, productId });
+      const removed = await FavoriteProduct.findOneAndDelete({userId:user, productId });
   
       if (!removed) {
         return res.status(404).json({ success: false, message: 'Favorite product not found.' });

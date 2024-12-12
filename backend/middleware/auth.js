@@ -7,7 +7,6 @@ const Seller = require("../models/Seller");
 
 exports.isAuthenticated = catchAsyncErrors(async(req,res,next) => {
     const token =   req.cookies.token || req.headers.authorization?.split(" ")[1];
-   console.log("🚀 ~ exports.isAuthenticatedSeller=catchAsyncErrors ~ token:", token)
     if(!token){
         return next(new ErrorHandler("Please login to continue", 401));
     }
