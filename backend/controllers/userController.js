@@ -16,45 +16,6 @@ const Order = require('../models/Order');
 const { getCart, addCartItem ,removeCartItem } = require('./cartController');
 const router = express.Router();
 
-// exportss.registerUser = async  = async (req, res)=> => {
-
-
-
-
-  // router.post("/register",registor);
-  // router.post("/registerSeller",registorSeller);
-  // router.post("/login",login);
-  // router.post("/setproduct",isAuthenticatedSeller,upload.array('images', 4),setproduct);
-  // router.get("/getproduct",isAuthenticated,getproduct);
-  // router.get("/getproductbyid",isAuthenticated,getproductbyid);
-  // router.post("/setorder",isAuthenticated,setorder);
-  // router.get("/getorderbyseller",isAuthenticatedSeller,getorderbyseller);
-
-  // router.get("/getorderbyuser",isAuthenticated,getorderbycustomer);
-
-  // router.get("/getsellerprofile",isAuthenticatedSeller,getsellerprofile);
-  // router.post("/setsellerprofile",isAuthenticatedSeller,upload.single('image'),setsellerprofile);
-  // load user
-// router.get("/getseller",isAuthenticated,catchAsyncErrors(getseller));
-// log out user
-// router.get("/logout",catchAsyncErrors(logout));
-
-// router.get("/getcart",isAuthenticated,getcart)
-// router.post('/cart/items',isAuthenticated,addcartItem )
-
-// router.get('/cart/items/:productId',isAuthenticated,removecartItem) 
-
-// Add a favorite product
-// router.post('/favorite', isAuthenticated,addFavoriteProduct);
-
-// Get all favorite products for a user
-// router.get('/favorite',isAuthenticated,getFavoriteProducts);
-// 
-// Remove a favorite product
-// router.get('/favorite/:productId',isAuthenticated,removeFavoriteProduct);
-
-
-
 
   exports.registor = async (req, res) => {
     const { email, password, phone, personalInfo, address } = req.body;
@@ -210,10 +171,10 @@ const router = express.Router();
 
  exports.getsellerprofile= async (req, res, next)=> {
   try {
-    const seller =req.seller;
+    const seller= req.Seller?._id;
     const sellerprofile = await Seller.findById(seller);
     const {personalInfo,email}=sellerprofile;
-    const { firstName ,lastName,cellular,image}=personalInfo;
+    const { firstName ,lastName,cellular,profilePicture}=personalInfo;
     if (!sellerprofile) {
       return next(new ErrorHandler("Seller doesn't exists", 400));
     }
@@ -225,7 +186,7 @@ const router = express.Router();
         lastName,
         email,
         cellular,
-        image
+        profilePicture
       }
     });
   } catch (error) {
@@ -233,8 +194,8 @@ const router = express.Router();
   }
 }
  exports.setsellerprofile = async (req, res)=> {
-  const { firstName,lastName,email, password, phone,image } = req.body;
-const sellerId=req.seller;
+  const { firstName,lastName, phone,image } = req.body;
+  const sellerId= req.Seller?._id;
   // Validation for required fields
   if (!sellerId) {
     return res.status(400).json({ msg: 'Seller ID is required' });
@@ -248,13 +209,12 @@ const sellerId=req.seller;
     }
 
     // Update seller details
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
     if (firstName !== undefined) seller.personalInfo.firstName = firstName;
     if (lastName !== undefined) seller.personalInfo.lastName = lastName;
-    if (password !== undefined) seller.password = hashedPassword;
     if (phone !== undefined) seller.personalInfo.cellular = phone;
-    if (phone !== undefined) seller.personalInfo.profilePicture = image;
-    if (email !== undefined) seller.email = email;
+    if (image !== undefined) seller.personalInfo.profilePicture = image;
+
 
     // Save the updated seller
     await seller.save();

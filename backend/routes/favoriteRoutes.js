@@ -10,4 +10,5 @@ router.post('/addfavorite', isAuthenticated,addFavoriteProduct);
 router.get('/getfavorite',isAuthenticated,getFavoriteProducts);
 
 router.get('/removefavorite',isAuthenticated,removeFavoriteProduct);
+
 module.exports = router;

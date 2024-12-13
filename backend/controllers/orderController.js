@@ -1,6 +1,14 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const ErrorHandler = require("../utils/ErrorHandler");
+  const stripe = require('stripe')("sk_test_51NgSA1CYVog714gF2YZ4E38BliPzj3ZovONskoLHXaU5dNwvu0IaAFQcoI9mnOZZU5HooWDsg2hxyGkWMw5PTMt600Jc7VkpUe")
+
+
+  function generateOrderNumber() {
+    const timestamp = Date.now().toString(); // Current timestamp in milliseconds
+    const randomString = Math.random().toString(36).substring(2, 8).toUpperCase(); // Random alphanumeric string
+    return `ORD-${timestamp}-${randomString}`; // Example: ORD-1689012345678-ABC123
+  }
 
 exports.getorderbyseller= async (req, res, next)=>
     {
@@ -36,71 +44,84 @@ exports.getorderbyseller= async (req, res, next)=>
         return next(new ErrorHandler(error.message, 500));
       }
     }
-   exports.setorder= async (req, res, next)=>
-    {
-      const { items, address,card,coupon,paymentmethod } = req.body; // Removed card and coupon for simplicity
-      const user=req.user; //req.user;
-      console.log(req.body)
-      if (!items || !address ) {
-        return res.status(400).json({ msg: 'Please provide all required fields' });
-      }
-      
-    // Group items by seller
-    const ordersBySeller = {};
-  
-    // Fetch product details for all items in one go
-    const productIds = items.map(item => item._id);
-    const products = await Product.find({ _id: { $in: productIds } });
-  
-    // Organize products by seller and prepare the order items
-    for (const item of items) {
-      const { _id, quantity } = item; // Get only id and quantity from item
-      const product = products.find(p => p._id.toString() === _id);
-  
-      if (!product) {
-        throw new Error(`Product not found for ID: ${_id}`);
-      }
-  
-      const sellerId = product.seller; // Assuming the product has a seller field
-  
-      if (!ordersBySeller[sellerId]) {
-        ordersBySeller[sellerId] = [];
-      }
-  
-      ordersBySeller[sellerId].push({
-        product: _id,
-        quantity,
-        price: product.price // Get price from product
-      });
+
+
+
+
+
+   exports.setorder = async (req, res, next) => {
+  const { items, address, card, coupon, paymentmethod } = req.body;
+  const user = req.user._id;
+  if (!items || !address || !card) {
+    return res.status(400).json({ msg: 'Please provide all required fields' });
+  }
+
+  // Group items and calculate total amount
+  const productIds = items.map(item => item._id);
+  const products = await Product.find({ _id: { $in: productIds } });
+
+  let totalAmount = 0;
+  const ordersBySeller = {};
+
+  items.forEach(item => {
+    const product = products.find(p => p._id.toString() === item._id);
+    if (!product) throw new Error(`Product not found for ID: ${item._id}`);
+    const sellerId = product.seller;
+
+    if (!ordersBySeller[sellerId]) {
+      ordersBySeller[sellerId] = [];
     }
-  
+    ordersBySeller[sellerId].push({
+      product: item._id,
+      quantity: item.quantity,
+      price: product.price
+    });
+    totalAmount += product.price * item.quantity;
+  });
+
+  const shipping = 100;
+  totalAmount += shipping;
+
+  // Process payment
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: totalAmount * 100, 
+      currency: 'usd',
+      payment_method_data: {
+        type: 'card',
+        card: {
+          number: card.number,
+          exp_month: card.exp_month,
+          exp_year: card.exp_year,
+          cvc: card.cvc
+        }
+      },
+      confirm: true
+    });
+
     const orders = [];
     for (const sellerId in ordersBySeller) {
       const orderItems = ordersBySeller[sellerId];
-      const totalAmount = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      const orderNumber = generateOrderNumber(); // Implement your logic to generate unique order numbers
-      const shipping=100;
+      const orderNumber = generateOrderNumber();
       const order = new Order({
         orderNumber,
         customer: user,
         seller: sellerId,
         items: orderItems,
-        totalAmount:totalAmount+shipping,
+        totalAmount,
         shippingAddress: address,
       });
-  
       orders.push(order);
     }
-  
-    try {
-      await Order.insertMany(orders);
-      console.log('Orders created successfully:', orders);
-      return res.status(200).json({
-        success: true,
-        msg: 'Order succussfully'}
-      );
-    } catch (error) {
-      console.error('Server error:', error.message);
-      res.status(500).send('Server error');
-    }
+
+    await Order.insertMany(orders);
+    return res.status(200).json({
+      success: true,
+      message: 'Order placed successfully',
+      paymentIntent
+    });
+  } catch (error) {
+    console.error('Payment failed:', error.message);
+    return res.status(500).json({ msg: 'Payment failed', error: error.message });
   }
+};

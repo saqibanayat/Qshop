@@ -44,7 +44,10 @@ const SellerSchema = new Schema({
     },
     dni: {
       type: String
-    }
+    },
+    profilePicture: {
+      type: String 
+    },
   },
   address: {
     departamento: {
