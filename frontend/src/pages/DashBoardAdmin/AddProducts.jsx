@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { AiFillPicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { AddProductApi } from "../../Redux/slice/authSlice";
+import { AddProductApi } from "../../Redux/slice/sellerSlice";
 import { toast } from "react-toastify";
 
 

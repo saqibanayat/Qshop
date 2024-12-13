@@ -5,8 +5,9 @@ const sendToken = (user, statusCode, res) => {
   const options = {
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
     httpOnly: true,
-    sameSite: "lax", // Change to "none" and secure to true in production
-    secure: false,   // Change to true in production
+    secure: false, 
+    sameSite: 'lax', // Prevents CSRF for same-origin requests, suitable for local
+  
   };
 
   res.status(statusCode).cookie("token", token, options).json({

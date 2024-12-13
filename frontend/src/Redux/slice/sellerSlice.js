@@ -1,51 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { instance } from '../../axios/axios'; 
+import {  axiosPrivate, instance } from '../../axios/axios'; 
 import axios from 'axios';
 
-export const RegisteruserApi = createAsyncThunk(
-  'authentication/RegisteruserApi',
-  async (data, thunkAPI) => {
-    try {
-      const res = await instance.post(`api/user/register`, data);
-      return res.data;
-    } catch (error) {
-      const message = error.response?.data?.alertMessage || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const RegisterSellerApi = createAsyncThunk(
-  'authentication/RegisterSellerApi',
-  async (data, thunkAPI) => {
-    try {
-      const res = await instance.post(`api/user/registerSeller`, data);
-      return res.data;
-    } catch (error) {
-      const message = error.response?.data?.alertMessage || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 
-
-export const loginApi = createAsyncThunk(
-  'authentication/loginApi',
-  async (data, thunkAPI) => {
-    try {
-      const res = await instance.post(`api/user/login`, data);
-      return res.data;
-    } catch (error) {
-      const message = error.response?.data?.alertMessage || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-export const logoutApi = createAsyncThunk(
-  'authentication/logoutApi',
+export const getSellerProfileApi = createAsyncThunk(
+  'authentication/getSellerProfileApi',
   async (_, thunkAPI) => {
     try {
-      const res = await instance.get(`api/user/logout`);
+      const res = await instance.get(`api/user/getsellerprofile`);
       return res.data;
     } catch (error) {
       const message = error.response?.data?.alertMessage || error.message || error.toString();
@@ -53,58 +16,107 @@ export const logoutApi = createAsyncThunk(
     }
   }
 );
+export const setSellerProfileApi = createAsyncThunk(
+  'authentication/setSellerProfileApi',
+  async (_, thunkAPI) => {
+    try {
+      const res = await instance.post(`api/user/setsellerprofile`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+//add the product by the seller
 
+export const AddProductApi = createAsyncThunk( 'authentication/AddProductApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await instance.post(`api/product/setproduct`,data, {
+        headers: { 
+          'Content-Type': 'application/form-data' 
+         }});
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+//get the list of products of seller
+
+export const getProductsApi = createAsyncThunk(
+  'authentication/getProductsApi',
+  async ({seller,category}, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/product/getproduct`,{
+        params:{seller,category}
+      });
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const initialState = {
   isLoading: false,
-  userData: {},
   sellerProfileData:{},
+  product:{},
   getSellerProductsList:{},
   message: '',
   error: null,
 };
 
-const authSlice = createSlice({
+const sellerSlice = createSlice({
   name: 'authentication',
   initialState,
-  reducers: {
-    updateAccessToken: (state, action) => {
-      state.userData = action.payload;
-    },
-  },
+//   reducers: {
+//     updateAccessToken: (state, action) => {
+//       state.userData = action.payload;
+//     },
+//   },
   extraReducers: (builder) => {
     builder
 
 
-      .addCase(loginApi.pending, (state) => {
+    
+      .addCase(getSellerProfileApi.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(loginApi.fulfilled, (state, action) => {
+      .addCase(getSellerProfileApi.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userData = action.payload;
+        state.sellerProfileData = action.payload;
         state.message = action.payload.message;
         state.error = null;
       })
-      .addCase(loginApi.rejected, (state, action) => {
+      
+      .addCase(getSellerProfileApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })
 
-      .addCase(logoutApi.pending, (state) => {
+
+
+      .addCase(getProductsApi.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(logoutApi.fulfilled, (state, action) => {
+      .addCase(getProductsApi.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userData = {};
+        // state.sellerProfileData = action.payload;
         state.message = action.payload.message;
         state.error = null;
       })
-      .addCase(logoutApi.rejected, (state, action) => {
+      
+      .addCase(getProductsApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })
+  
   },
 });
 
-export const { updateAccessToken } = authSlice.actions;
-export default authSlice.reducer;
+export const { updateAccessToken } = sellerSlice.actions;
+export default sellerSlice.reducer;

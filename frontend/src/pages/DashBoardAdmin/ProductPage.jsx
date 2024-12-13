@@ -1,37 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductsApi } from "../../Redux/slice/authSlice";
+import { getProductsApi } from "../../Redux/slice/sellerSlice";
 
-const products = [
-  {
-    id: 157892,
-    name: "Case Iphone 15 pro max",
-    category: "Tecnología",
-    quantity: 35,
-    price: "S/1500.00 PEN",
-  },
-  {
-    id: 157892,
-    name: "Case Iphone 15 pro max",
-    category: "Hogar",
-    quantity: 1787,
-    price: "S/1500.00 PEN",
-  },
-  {
-    id: 157892,
-    name: "Case Iphone 15 pro max",
-    category: "Belleza",
-    quantity: 896,
-    price: "S/1500.00 PEN",
-  },
-  {
-    id: 157892,
-    name: "Case Iphone 15 pro max",
-    category: "Deportes",
-    quantity: 450,
-    price: "S/1500.00 PEN",
-  },
-];
+
 
 const approvedProducts = [
   { name: "Case Iphone 15 Pro Max", price: "S/1500.00 PEN", quantity: 16 },
@@ -45,18 +16,22 @@ const deniedProducts = [
 
 const ProductPage = () => {
   const dispatch = useDispatch()
-  const{getSellerProductsList}=useSelector((state)=>state.user)
   const [productList, setproductList] = useState([])
+  const{userData}=useSelector((state)=>state.user)
+  console.log("🚀 ~ ProductPage ~ userData:", userData)
+
   useEffect(()=>{
 
-    dispatch(getProductsApi())
+    dispatch(getProductsApi({seller:userData?.user?._id}))
+    .then((res)=>{
+      if(res?.payload?.success===true){
+        setproductList(res?.payload?.products)
+      }
+
+    })
   },[])
 
-  useEffect(() => {
-  if(getSellerProductsList){
-    setproductList(getSellerProductsList?.product)
-  }
-  }, [getSellerProductsList])
+
   
   return (
     <div className="p-4 md:p-8">
@@ -121,10 +96,23 @@ const ProductPage = () => {
             productList?.map((product, index) => (
               <tr key={index} className="border-t">
                 <td className="py-2 px-4">{product._id}</td>
-                <td className="py-2 px-4 text-blue-500">{product?.name}</td>
-                <td className="py-2 px-4">{product?.category || ''}</td>
-                <td className="py-2 px-4">{product?.quantity || ''}</td>
-                <td className="py-2 px-4">{product?.price || ''}</td>
+                <td className="py-2 px-4 text-blue-500">
+                <div className="flex justify-center items-center gap-2 ">
+                 <img src={product?.images[0]} className="h-20" alt="" />    
+                  <p>   {product?.name}</p>
+                </div>
+            
+               
+                  </td>
+                <td className="py-2 px-4 ">
+                  <p> {product?.category || ''}</p>
+                 
+                  </td>
+                <td className="py-2 px-4 ">
+                  <p>{product?.quantity || ''}</p>
+                  
+                  </td>
+                <td className="py-2 px-4"><p>{product?.price || ''}</p></td>
                 <td className="py-2 px-4 flex items-center justify-center space-x-2">
                   <button className="text-green-500">
                     <svg
