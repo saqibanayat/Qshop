@@ -8,6 +8,7 @@ const authRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const favoriteRoute = require('./routes/favoriteRoutes');
+const categoryRoute = require('./routes/categoryRoutes');
 app.use(cors({
   origin: ['http://localhost:3001',],
   credentials: true
@@ -35,8 +36,9 @@ const user = require("./controllers/userController");
 // app.use("/api/users", user);
 app.use('/api/user',authRouter);
 app.use('/api/product',productRouter);
-app.use('/api/order',orderRouter)
-app.use('/api/favorite',favoriteRoute)
+app.use('/api/order',orderRouter);
+app.use('/api/favorite',favoriteRoute);
+app.use('/api/category',categoryRoute);
 
 
 

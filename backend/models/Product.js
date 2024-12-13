@@ -12,7 +12,8 @@ const ProductSchema = new Schema({
     required: true
   },
   category: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'Category', 
     required: true
   },
   price: {
@@ -25,15 +26,15 @@ const ProductSchema = new Schema({
   },
   seller: {
     type: Schema.Types.ObjectId,
-    ref: 'Seller', // Assuming there is a Seller model
+    ref: 'Seller', 
     required: true
   },
   sizes: {
-    type: [String], // Array of strings for multiple sizes
+    type: [String], 
     required: true
   },
   flavors: {
-    type: [String], // Array of strings for multiple flavors
+    type: [String], 
     required: true
   },
   colors: {
@@ -41,7 +42,7 @@ const ProductSchema = new Schema({
     required: true
   },
   images: {
-    type: [String], // Array of image URLs or paths
+    type: [String], 
     required: true
   },
   createdAt: {

@@ -2,6 +2,10 @@
 import { Flex } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import {ReactComponent as NextIcon} from '../assets/svg/next.svg';
+import {ReactComponent as BackIcon} from '../assets/svg/back.svg';
+import {ReactComponent as CartIcon} from '../assets/svg/cart.svg';
+import {ReactComponent as HeartIcon} from '../assets/svg/heart.svg';
 import {
   Box,
   IconButton,
@@ -128,63 +132,12 @@ export default function CaptionCarousel() {
             zIndex={2}
             onClick={() => slider?.slickPrev()}
           >
-            {/* <BiLeftArrowAlt size="40px" /> */}
-            <svg
-              width="83"
-              height="83"
-              viewBox="0 0 83 83"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g filter="url(#filter0_d_6_3635)">
-                <circle cx="41.5" cy="37.5" r="37.5" fill="white" />
-              </g>
-              <path
-                d="M24 38L46.5 60.5L50 56.75L31.5 38L50 19.25L46.5 15.5L24 38Z"
-                fill="#1C98F7"
-              />
-              <defs>
-                <filter
-                  id="filter0_d_6_3635"
-                  x="0"
-                  y="0"
-                  width="83"
-                  height="83"
-                  filterUnits="userSpaceOnUse"
-                  color-interpolation-filters="sRGB"
-                >
-                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dy="4" />
-                  <feGaussianBlur stdDeviation="2" />
-                  <feComposite in2="hardAlpha" operator="out" />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in2="BackgroundImageFix"
-                    result="effect1_dropShadow_6_3635"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_dropShadow_6_3635"
-                    result="shape"
-                  />
-                </filter>
-              </defs>
-            </svg>
+          
+            <NextIcon/>
           </IconButton>
         )}
 
-        {/* Right Icon */}
+       
         {!isSmallScreen && (
           <IconButton
             aria-label="right-arrow"
@@ -198,65 +151,8 @@ export default function CaptionCarousel() {
             zIndex={2}
             onClick={() => slider?.slickNext()}
           >
-            {/* <BiRightArrowAlt size="40px" /> */}
-            <svg
-              width="83"
-              height="83"
-              viewBox="0 0 83 83"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g filter="url(#filter0_d_6_3639)">
-                <circle
-                  cx="37.5"
-                  cy="37.5"
-                  r="37.5"
-                  transform="matrix(-1 0 0 1 79 0)"
-                  fill="white"
-                />
-              </g>
-              <path
-                d="M56 38L33.5 60.5L30 56.75L48.5 38L30 19.25L33.5 15.5L56 38Z"
-                fill="#1C98F7"
-              />
-              <defs>
-                <filter
-                  id="filter0_d_6_3639"
-                  x="0"
-                  y="0"
-                  width="83"
-                  height="83"
-                  filterUnits="userSpaceOnUse"
-                  color-interpolation-filters="sRGB"
-                >
-                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                  <feColorMatrix
-                    in="SourceAlpha"
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                    result="hardAlpha"
-                  />
-                  <feOffset dy="4" />
-                  <feGaussianBlur stdDeviation="2" />
-                  <feComposite in2="hardAlpha" operator="out" />
-                  <feColorMatrix
-                    type="matrix"
-                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in2="BackgroundImageFix"
-                    result="effect1_dropShadow_6_3639"
-                  />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_dropShadow_6_3639"
-                    result="shape"
-                  />
-                </filter>
-              </defs>
-            </svg>
+          
+           <BackIcon/>
           </IconButton>
         )}
       </div>
@@ -267,7 +163,7 @@ export default function CaptionCarousel() {
         width={"92%"}
         mx="auto"
         overflow={"hidden"}
-       className="px-24"
+       className="px-5"
       >
         {/* CSS files for react-slick */}
         <link
@@ -308,30 +204,7 @@ export default function CaptionCarousel() {
                     background="none"
                     _hover={{ background: "none" }}
                   >
-                    <svg
-                      width="60"
-                      height="60"
-                      viewBox="0 0 60 60"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        className="fill-indigo-50 transition-all duration-500 group-hover:fill-indigo-100"
-                        cx="30"
-                        cy="30"
-                        r="30"
-                        fill=""
-                      />
-                      <path
-                        className="stroke-indigo-600 transition-all duration-500 group-hover:stroke-indigo-700"
-                        d="M21.4709 31.3196L30.0282 39.7501L38.96 30.9506M30.0035 22.0789C32.4787 19.6404 36.5008 19.6404 38.976 22.0789C41.4512 24.5254 41.4512 28.4799 38.9842 30.9265M29.9956 22.0789C27.5205 19.6404 23.4983 19.6404 21.0231 22.0789C18.548 24.5174 18.548 28.4799 21.0231 30.9184M21.0231 30.9184L21.0441 30.939M21.0231 30.9184L21.4628 31.3115"
-                        stroke=""
-                        strokeWidth="1.6"
-                        strokeMiterlimit="10"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <HeartIcon/>
                   </Button>
                 </Box>
               <Heading
@@ -427,9 +300,7 @@ export default function CaptionCarousel() {
 
 
               <button className="h-[52px] flex flex-row w-[300px] gap-2 items-center justify-center rounded-lg bg-yellow-400 text-center text-2xl py-4 text-white">
-              <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M7.5 22C6.95 22 6.47933 21.8043 6.088 21.413C5.69667 21.0217 5.50067 20.5507 5.5 20C5.5 19.45 5.696 18.9793 6.088 18.588C6.48 18.1967 6.95067 18.0007 7.5 18C8.05 18 8.521 18.196 8.913 18.588C9.305 18.98 9.50067 19.4507 9.5 20C9.5 20.55 9.30433 21.021 8.913 21.413C8.52167 21.805 8.05067 22.0007 7.5 22ZM17.5 22C16.95 22 16.4793 21.8043 16.088 21.413C15.6967 21.0217 15.5007 20.5507 15.5 20C15.5 19.45 15.696 18.9793 16.088 18.588C16.48 18.1967 16.9507 18.0007 17.5 18C18.05 18 18.521 18.196 18.913 18.588C19.305 18.98 19.5007 19.4507 19.5 20C19.5 20.55 19.3043 21.021 18.913 21.413C18.5217 21.805 18.0507 22.0007 17.5 22ZM5.7 4H20.45C20.8333 4 21.125 4.171 21.325 4.513C21.525 4.855 21.5333 5.20067 21.35 5.55L17.8 11.95C17.6167 12.2833 17.371 12.5417 17.063 12.725C16.755 12.9083 16.4173 13 16.05 13H8.6L7.5 15H19.5V17H7.5C6.75 17 6.18333 16.671 5.8 16.013C5.41667 15.355 5.4 14.7007 5.75 14.05L7.1 11.6L3.5 4H1.5V2H4.75L5.7 4Z" fill="white"/>
-</svg>
+            <CartIcon/>
 
              
             </button>
