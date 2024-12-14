@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductsApi } from "../../Redux/slice/sellerSlice";
+import { getCategoriesApi, getProductsApi } from "../../Redux/slice/sellerSlice";
 import {ReactComponent as SearchIcon} from "../../assets/svg/searchIcon.svg";
 import { RiDeleteBinFill } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
+import TableDropdown from "../../components/qshopTableDropdown/TableDropdown";
 
 
 const approvedProducts = [
@@ -19,8 +20,9 @@ const deniedProducts = [
 const ProductPage = () => {
   const dispatch = useDispatch()
   const [productList, setproductList] = useState([])
+  const [categoryId, setcategoryId] = useState()
   const{userData}=useSelector((state)=>state.user)
-  console.log("🚀 ~ ProductPage ~ userData:", userData)
+  const{listOfCategory}=useSelector((state)=>state.seller)
 
   useEffect(()=>{
 
@@ -32,7 +34,10 @@ const ProductPage = () => {
 
     })
   },[])
-
+  useEffect(() => {
+    dispatch(getCategoriesApi())
+    }, [])
+    
 
   
   return (
@@ -50,10 +55,18 @@ const ProductPage = () => {
             placeholder="Search"
           />
         </div>
-        <select className="bg-gray-100 rounded-lg shadow-lg p-2">
+        {/* <select className="bg-gray-100 rounded-lg shadow-lg p-2">
           <option>Todas las categorías</option>
-          {/* Add more categories as needed */}
-        </select>
+        </select> */}
+               <TableDropdown
+
+items={listOfCategory}
+onSelect={(data)=>setcategoryId(data?._id)}
+listKeyName='name' //variable which you want to show in dropdown list suppose "name"
+selectionName='Select category'
+
+/>
+
         <button className="bg-orange-500 text-white px-4 py-2 rounded-lg">
           Agregar producto
         </button>

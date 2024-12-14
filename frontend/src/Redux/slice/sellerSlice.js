@@ -3,12 +3,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {  axiosPrivate, instance } from '../../axios/axios'; 
 import axios from 'axios';
 
-
 export const getSellerProfileApi = createAsyncThunk(
   'authentication/getSellerProfileApi',
   async (_, thunkAPI) => {
     try {
-      const res = await instance.get(`api/user/getsellerprofile`);
+      const res = await axiosPrivate.get(`api/user/getsellerprofile`);
       return res.data;
     } catch (error) {
       const message = error.response?.data?.alertMessage || error.message || error.toString();
@@ -18,9 +17,12 @@ export const getSellerProfileApi = createAsyncThunk(
 );
 export const setSellerProfileApi = createAsyncThunk(
   'authentication/setSellerProfileApi',
-  async (_, thunkAPI) => {
+  async (data, thunkAPI) => {
     try {
-      const res = await instance.post(`api/user/setsellerprofile`);
+      const res = await axiosPrivate.post(`api/user/setsellerprofile`,data, {
+        headers: { 
+          'Content-Type': 'application/form-data' 
+         }});
       return res.data;
     } catch (error) {
       const message = error.response?.data?.alertMessage || error.message || error.toString();
@@ -95,21 +97,6 @@ const sellerSlice = createSlice({
     builder
 
 
-    
-      .addCase(getSellerProfileApi.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getSellerProfileApi.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.sellerProfileData = action.payload;
-        state.message = action.payload.message;
-        state.error = null;
-      })
-      
-      .addCase(getSellerProfileApi.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload || action.error.message;
-      })
 
 
 
@@ -144,6 +131,20 @@ const sellerSlice = createSlice({
         state.error = action.payload || action.error.message;
       })
   
+
+      .addCase(getSellerProfileApi.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getSellerProfileApi.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.sellerProfileData = action.payload;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(getSellerProfileApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
   },
 });
 

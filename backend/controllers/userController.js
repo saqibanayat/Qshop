@@ -194,7 +194,7 @@ const router = express.Router();
   }
 }
  exports.setsellerprofile = async (req, res)=> {
-  const { firstName,lastName, phone,image } = req.body;
+  const { firstName,lastName, cellular,image,password } = req.body;
   const sellerId= req.Seller?._id;
   // Validation for required fields
   if (!sellerId) {
@@ -209,11 +209,12 @@ const router = express.Router();
     }
 
     // Update seller details
-    // const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     if (firstName !== undefined) seller.personalInfo.firstName = firstName;
     if (lastName !== undefined) seller.personalInfo.lastName = lastName;
-    if (phone !== undefined) seller.personalInfo.cellular = phone;
+    if (cellular !== undefined) seller.personalInfo.cellular = cellular;
     if (image !== undefined) seller.personalInfo.profilePicture = image;
+    if(password!== undefined) seller.password = hashedPassword;
 
 
     // Save the updated seller

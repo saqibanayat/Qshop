@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './tabledropdown.css';
 import { FaCaretDown } from "react-icons/fa";
 
-const TableDropdown = ({ items, onSelect, listKeyName ,selectionName}) => {
+const TableDropdown = ({ items, onSelect, listKeyName ,selectionName,...props}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(` ${selectionName? selectionName:''}`);
   const dropdownRef = useRef(null);
@@ -30,9 +30,9 @@ const TableDropdown = ({ items, onSelect, listKeyName ,selectionName}) => {
 
   return (
     <div ref={dropdownRef} className='custom-dropdown-container ' type="button" >
-      <div className='flex justify-between align-center select-item  p-4' onClick={toggleDropdown}>
+      <div className='flex justify-between align-center select-item  p-3 rounded-lg' {...props} onClick={toggleDropdown}>
         <div className='textdropdown'>{selectedItem}</div>
-        <div><FaCaretDown /></div>
+        <div><FaCaretDown className='ms-1 mt-1' /></div>
       </div>
       {isOpen && (
         <div className='dropdowndummy'>

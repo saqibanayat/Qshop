@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { instance } from '../../axios/axios'; 
+import { axiosPrivate, instance } from '../../axios/axios'; 
 import axios from 'axios';
 
 export const RegisteruserApi = createAsyncThunk(
@@ -41,6 +41,9 @@ export const loginApi = createAsyncThunk(
     }
   }
 );
+
+
+
 export const logoutApi = createAsyncThunk(
   'authentication/logoutApi',
   async (_, thunkAPI) => {
@@ -58,7 +61,7 @@ export const logoutApi = createAsyncThunk(
 const initialState = {
   isLoading: false,
   userData: {},
-  sellerProfileData:{},
+  
   getSellerProductsList:{},
   message: '',
   error: null,
@@ -103,6 +106,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })
+   
   },
 });
 

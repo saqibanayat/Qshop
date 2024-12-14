@@ -67,6 +67,14 @@ for (let i = 0; i < addProductData?.images.length; i++) {
    .then((res)=>{
     if(res?.payload?.success){
       toast.success(res?.payload?.msg)
+      setaddProductData(
+        {
+          name: '', description: '',
+          price: '', quantity: '',sizes: '', 
+          flavor: '',colors: '',images: []
+          
+        } 
+      )
     }
    })
 
@@ -75,7 +83,16 @@ for (let i = 0; i < addProductData?.images.length; i++) {
     }
   };
 
-
+const cancelProduct=()=>{
+  setaddProductData(
+    {
+      name: '', description: '',
+      price: '', quantity: '',sizes: '', 
+      flavor: '',colors: '',images: []
+      
+    } 
+  )
+}
 
 
   return (
@@ -293,7 +310,7 @@ for (let i = 0; i < addProductData?.images.length; i++) {
     
 
         <div className="flex justify-between space-x-6 mt-10 md:mt-12">
-          <button className="text-[#FF4747] font-Quicksand font-bold shadow-md border px-3 md:px-8 py-3 rounded-lg">
+          <button className="text-[#FF4747] font-Quicksand font-bold shadow-md border px-3 md:px-8 py-3 rounded-lg" onClick={cancelProduct}>
             Cancelar producto
           </button>
           <button type="submit" className="bg-[#40A81C] text-white font-Quicksand font-bold px-3 md:px-8 py-3 rounded-lg">
