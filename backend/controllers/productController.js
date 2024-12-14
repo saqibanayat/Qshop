@@ -51,7 +51,7 @@ exports.setproduct = async (req, res)=> {
       if (category) query.category = category; 
       if (seller) query.seller = seller;     
   
-      const products = await Product.find(query);
+      const products = await Product.find(query).populate('category', 'name'); 
   
       // Handle case where no products are found
       if (!products || products.length === 0) {

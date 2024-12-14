@@ -1,15 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiFillPicture } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { AddProductApi } from "../../Redux/slice/sellerSlice";
+import { AddProductApi, getCategoriesApi } from "../../Redux/slice/sellerSlice";
 import { toast } from "react-toastify";
+import TableDropdown from "../../components/qshopTableDropdown/TableDropdown";
 
 
 const AddProducts = () => {
   const fileInputRef = useRef(null);
   const {userData}=useSelector((state)=>state.user)
-  console.log("🚀 ~ AddProducts ~ userData:", userData)
   const dispatch = useDispatch()
+  const{listOfCategory}=useSelector((state)=>state.seller)
+  const [categoryId, setcategoryId] = useState()
   const [addProductData, setaddProductData] = useState({
     name: '',
     // seller:userData?.user?._id,
@@ -35,6 +37,9 @@ const AddProducts = () => {
       images: [...addProductData.images, ...files] // Append new images to array
     });
   };
+useEffect(() => {
+dispatch(getCategoriesApi())
+}, [])
 
 
 
@@ -52,16 +57,11 @@ const AddProducts = () => {
       }
     }
 formData.append('seller',userData?.user?._id)
-formData.append('category','one')
+formData.append('category',categoryId)
 for (let i = 0; i < addProductData?.images.length; i++) {
   formData.append('images', addProductData?.images[i]); 
 }
-    // addProductData.images.forEach((image, index) => {
-    //   formData.append(`images[${index}]`, image);
-    // });
-    // for (const file of addProductData?.images) {
-    //   formData.append('images',file); // 'images' is the field name
-    // }
+   
     try {
       dispatch(AddProductApi(formData))
    .then((res)=>{
@@ -131,6 +131,17 @@ for (let i = 0; i < addProductData?.images.length; i++) {
           value={addProductData.description}
           onChange={handleOnChange}
         ></textarea>
+
+<h1 className="font-Quicksand text-[#004E89] font-medium mt-8 mb-3">Category</h1>
+
+        <TableDropdown
+
+                  items={listOfCategory}
+                  onSelect={(data)=>setcategoryId(data?._id)}
+                  listKeyName='name' //variable which you want to show in dropdown list suppose "name"
+                  selectionName='Select category'
+ 
+        />
 
         {/* Sizes, Flavors, Colors */}
         <div className="flex flex-col md:flex-row md:justify-between md:space-x-6 lg:space-x-12 mt-6">

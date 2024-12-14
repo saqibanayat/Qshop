@@ -60,12 +60,25 @@ export const getProductsApi = createAsyncThunk(
     }
   }
 );
+export const getCategoriesApi = createAsyncThunk(
+  'authentication/getCategoriesApi',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/category/getcategory`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const initialState = {
   isLoading: false,
   sellerProfileData:{},
   product:{},
   getSellerProductsList:{},
+  listOfCategory:[],
   message: '',
   error: null,
 };
@@ -111,6 +124,22 @@ const sellerSlice = createSlice({
       })
       
       .addCase(getProductsApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+
+
+      .addCase(getCategoriesApi.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getCategoriesApi.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.listOfCategory = action.payload;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      
+      .addCase(getCategoriesApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

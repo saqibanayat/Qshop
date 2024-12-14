@@ -1,0 +1,49 @@
+.custom-dropdown-container {
+    position: relative;
+      margin:0px 0px;
+  }
+  
+  .select-item {
+    cursor: pointer;
+ 
+    background-color: #F5F5F5;
+   
+   
+  }
+  .textdropdown {
+    white-space: nowrap;    
+    overflow: hidden;      
+    text-overflow: ellipsis; 
+  }
+  .select-item:hover {
+    background-color: #dddede;        /* Blue background on hover */
+                 /* White text color on hover */
+  }
+  
+  .dropdowndummy {
+    position: absolute;
+    min-width: 100%;
+    top: 100%;
+    cursor: pointer;
+    /* left: 0; */
+    right: 0;
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure it is on top of other elements */
+    display: block; /* Make sure it's displayed */
+    overflow-y: auto;
+    overflow-x: none;
+    max-height: 300px;
+  }
+  
+  .dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1;
+  }

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductsApi } from "../../Redux/slice/sellerSlice";
-
+import {ReactComponent as SearchIcon} from "../../assets/svg/searchIcon.svg";
+import { RiDeleteBinFill } from "react-icons/ri";
+import { MdEdit } from "react-icons/md";
 
 
 const approvedProducts = [
@@ -39,30 +41,8 @@ const ProductPage = () => {
 
       <div className="flex flex-col md:flex-row items-center mt-6 gap-4">
         <div className="flex flex-1 items-center bg-gray-100 rounded-lg shadow-lg p-2">
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 30 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g clip-path="url(#clip0_434_6976)">
-              <path
-                d="M19.2462 17.4833H18.2653L17.9176 17.1481C19.4076 15.4097 20.1775 13.0382 19.7553 10.5176C19.1717 7.06575 16.2911 4.30925 12.8144 3.88708C7.56214 3.24141 3.1418 7.66175 3.78747 12.914C4.20964 16.3907 6.96614 19.2713 10.418 19.8549C12.9386 20.2771 15.3101 19.5072 17.0485 18.0172L17.3837 18.3649V19.3458L22.6608 24.6229C23.1699 25.132 24.0018 25.132 24.5109 24.6229C25.02 24.1138 25.02 23.2819 24.5109 22.7728L19.2462 17.4833ZM11.7962 17.4833C8.70447 17.4833 6.20872 14.9876 6.20872 11.8958C6.20872 8.80408 8.70447 6.30833 11.7962 6.30833C14.888 6.30833 17.3837 8.80408 17.3837 11.8958C17.3837 14.9876 14.888 17.4833 11.7962 17.4833Z"
-                fill="#989898"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_434_6976">
-                <rect
-                  width="29.8"
-                  height="29.8"
-                  fill="white"
-                  transform="translate(0 0.0996094)"
-                />
-              </clipPath>
-            </defs>
-          </svg>
+      
+        <SearchIcon/>
 
           <input
             type="text"
@@ -105,7 +85,7 @@ const ProductPage = () => {
                
                   </td>
                 <td className="py-2 px-4 ">
-                  <p> {product?.category || ''}</p>
+                  <p> {product?.category?.name || ''}</p>
                  
                   </td>
                 <td className="py-2 px-4 ">
@@ -113,35 +93,14 @@ const ProductPage = () => {
                   
                   </td>
                 <td className="py-2 px-4"><p>{product?.price || ''}</p></td>
-                <td className="py-2 px-4 flex items-center justify-center space-x-2">
-                  <button className="text-green-500">
-                    <svg
-                      width="25"
-                      height="25"
-                      viewBox="0 0 25 25"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3.125 21.875V17.4479L16.875 3.72396C17.0833 3.53299 17.3135 3.38542 17.5656 3.28125C17.8177 3.17708 18.0823 3.125 18.3594 3.125C18.6372 3.125 18.9062 3.17708 19.1667 3.28125C19.4271 3.38542 19.6528 3.54167 19.8437 3.75L21.276 5.20833C21.4844 5.39931 21.6365 5.625 21.7323 5.88542C21.8281 6.14583 21.8757 6.40625 21.875 6.66667C21.875 6.94444 21.8274 7.20937 21.7323 7.46146C21.6372 7.71354 21.4851 7.9434 21.276 8.15104L7.55208 21.875H3.125ZM18.3333 8.125L19.7917 6.66667L18.3333 5.20833L16.875 6.66667L18.3333 8.125Z"
-                        fill="#40A81C"
-                      />
-                    </svg>
-                  </button>
-                  <button className="text-red-500">
-                    <svg
-                      width="16"
-                      height="18"
-                      viewBox="0 0 16 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 18C2.45 18 1.97933 17.8043 1.588 17.413C1.19667 17.0217 1.00067 16.5507 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8043 17.021 14.413 17.413C14.0217 17.805 13.5507 18.0007 13 18H3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-                        fill="#FF4747"
-                      />
-                    </svg>
-                  </button>
+                <td className="py-2 px-4 ">
+                  <div className="flex items-center justify-center space-x-2">
+                       <MdEdit color="#40A81C" size={25}/>
+
+                  <RiDeleteBinFill color="#FF4747" size={25} /> 
+                  </div>
+            
+
                 </td>
               </tr>
             ))
