@@ -91,12 +91,12 @@ function App() {
 
           <Route path="/" element={<HomePageV2/>} />
           <Route path="/HomePageV2" element={<HomePageV1 />} />
-          <Route path="/ProductDetails" element={<ProductDetails />} />
+          {/* <Route path="/ProductDetails" element={<ProductDetails />} /> */}
           <Route path="/ProductsList" element={<ProductsList />} />
           <Route path="/ProductCompra" element={<ProductCompra />} />
           <Route path="/UserForm" element={<UserForm />} />
 
-          <Route path="/ProductDetail" element={<ProductDetail />} />
+          <Route path="/ProductDetail/:id" element={<ProductDetail />} />
 
           <Route path="/emptycart" element={<EmptyCartPage />} />
           <Route path="/cartwithitems" element={<CartWithItemsPage />} />

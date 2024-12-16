@@ -1,6 +1,6 @@
 import React from "react";
 
-const AboutAndSupplier = () => {
+const AboutAndSupplier = ({productDetail,productCount}) => {
   return (
     <div className="flex justify-center flex-col items-center gap-10 overflow-hidden">
       <div className="px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-36 items-center justify-center">
@@ -42,7 +42,10 @@ const AboutAndSupplier = () => {
           </h1>
           <div className="flex flex-row py-6 gap-6">
             <div>
-            <svg
+              {productDetail?.seller?.personalInfo?.profilePicture? 
+               <img width="205" height="205" src={productDetail?.seller?.personalInfo?.profilePicture} alt="" />
+            :
+             <svg
                 width="205"
                 height="205"
                 viewBox="0 0 205 205"
@@ -51,10 +54,13 @@ const AboutAndSupplier = () => {
               >
                 <rect width="205" height="205" rx="20" fill="#B8D7FF" />
               </svg>
+            }
+             
+           
             </div>
             <div>
               <h1 className="text-blue-600 text-2xl font-bold py-4">
-                José Hernández
+                {productDetail?.seller?.personalInfo?.firstName+' '+productDetail?.seller?.personalInfo?.lastName}
               </h1>
               <div className="flex flex-row items-center gap-2">
               <svg
@@ -101,7 +107,7 @@ const AboutAndSupplier = () => {
                 </svg>
 
 
-                <h1>10 productos</h1>
+                <h1>{productCount} productos</h1>
               </div>
             </div>
           </div>

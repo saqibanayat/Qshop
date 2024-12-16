@@ -48,11 +48,25 @@ export const AddProductApi = createAsyncThunk( 'authentication/AddProductApi',
 );
 //get the list of products of seller
 
-export const getProductsApi = createAsyncThunk(
-  'authentication/getProductsApi',
-  async ({seller,category}, thunkAPI) => {
+export const productDetailApi = createAsyncThunk(
+  'authentication/productDetailApi',
+  async (id, thunkAPI) => {
     try {
-      const res = await axiosPrivate.get(`api/product/getproduct`,{
+      const res = await instance.get(`api/product/getproductbyid`,{
+        params:{id}
+      });
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const  getProductsApi = createAsyncThunk(
+  'authentication/ getProductsApi',
+  async ({seller,category}={}, thunkAPI) => {
+    try {
+      const res = await instance.get(`api/product/getproduct`,{
         params:{seller,category}
       });
       return res.data;
@@ -142,6 +156,20 @@ const sellerSlice = createSlice({
         state.error = null;
       })
       .addCase(getSellerProfileApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+
+
+      .addCase(productDetailApi.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(productDetailApi.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(productDetailApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

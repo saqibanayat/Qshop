@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaUser,
   FaHeart,
@@ -14,25 +14,35 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logoutApi } from "../../Redux/slice/authSlice";
 import { toast } from "react-toastify";
+import { Navbarvalue } from "../../context/NavbarValuesContext";
 
-const Sidebar = ({ setCurrentComponent }) => {
-
+const Sidebar = () => {
+  const [activeButton, setActiveButton] = useState(""); // Track active button
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const {adminCurrentComponentHandler}=Navbarvalue()
 
-  const logoutUser = ()=>{
-    console.log('running');
-    
+
+  const logoutUser = () => {
     dispatch(logoutApi())
-    .then((res)=>{
-      if(res?.payload?.success===true){
-        toast.success(res?.payload?.message)
-        navigate('/login')
-      }
-    })
-  }
+      .then((res) => {
+        if (res?.payload?.success === true) {
+          toast.success(res?.payload?.message);
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        toast.error("Error logging out");
+      });
+  };
+
+  const handleButtonClick = (componentName) => {
+    setActiveButton(componentName); // Set active button
+    adminCurrentComponentHandler(componentName); // Set current component
+  };
+
   return (
-    <div className="bg-white p-5 px-6 hidden md:block h-full">
+    <div className="bg-white p-5 px-6 hidden md:block h-full rounded-xl">
       <div className="flex flex-col">
         <h1 className="text-[#1C98F7] font-normal font-Inter text-lg">Hola,</h1>
         <h1 className="font-Inter font-medium text-2xl">José Luis</h1>
@@ -40,81 +50,87 @@ const Sidebar = ({ setCurrentComponent }) => {
       {/* nav items */}
       <nav className="mt-10 pb-14 px-2">
         <button
-          onClick={() => setCurrentComponent("Profile")}
-          className="flex items-center py-2 font-Inter text-lg text-[#1C98F7] hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Profile")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Profile" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaUser className="mr-4 text-[#1C98F7]" />
+          <FaUser className="mr-4" />
           Perfil
         </button>
         <button
-          onClick={() => setCurrentComponent("Favorites")}
-          className="flex items-center py-2 font-Inter text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Favorite")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Favorites" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaHeart className="mr-4 text-[#1C98F7]" />
+          <FaHeart className="mr-4" />
           Favoritos
         </button>
         <button
-          onClick={() => setCurrentComponent("Orderstatus")}
-          className="flex items-center py-2 font-Inter text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Orderstatus")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Orderstatus" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaBox className="mr-4 text-[#1C98F7]" />
+          <FaBox className="mr-4" />
           Estatus de pedidos (4)
         </button>
         <button
-          onClick={() => setCurrentComponent("Paymentmethods")}
-          className="flex items-center py-2 font-Inter text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Paymentmethods")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Paymentmethods" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaCreditCard className="mr-4 text-[#1C98F7]" />
+          <FaCreditCard className="mr-4" />
           Formas de pago
         </button>
         <button
-          onClick={() => setCurrentComponent("Chats")}
-          className="flex items-center py-2 font-Inter text-base text-[#FF9900] hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Chats")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Chats" ? "bg-[#004E89] text-white" : "text-[#FF9900]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaComments className="mr-4 text-[#1C98F7]" />
+          <FaComments className="mr-4" />
           Chat (4)
         </button>
         <button
-          onClick={() => setCurrentComponent("ShippingDetails")}
-          className="flex items-center py-2 font-Inter mb-6 text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Direction")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Direction" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaSignOutAlt className="mr-4 text-[#1C98F7]" />
-          Regresar
-        </button>
-        <button
-          onClick={() => setCurrentComponent("Direction")}
-          className="flex items-center py-2 font-Inter text-base mb-6 border-b-4 border-spacing-10 text-black hover:bg-[#004E89] hover:text-white"
-        >
-          <FaMapMarkerAlt className="mr-4 text-[#1C98F7]" />
+          <FaMapMarkerAlt className="mr-4" />
           Dirección
         </button>
-  
         <button
-          onClick={() => setCurrentComponent("Ayuda")}
-          className="flex items-center py-2 font-Inter text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Ayuda")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Ayuda" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaQuestionCircle className="mr-4 text-[#1C98F7]" />
+          <FaQuestionCircle className="mr-4" />
           Ayuda
         </button>
         <button
-          onClick={() => setCurrentComponent("Tickets")}
-          className="flex items-center py-2 font-Inter text-base text-black hover:bg-[#004E89] hover:text-white"
+          onClick={() => handleButtonClick("Tickets")}
+          className={`flex items-center py-2 px-2 font-Inter text-lg ${
+            activeButton === "Tickets" ? "bg-[#004E89] text-white" : "text-[#777777]"
+          } hover:bg-[#004E89] hover:text-white`}
         >
-          <FaTicketAlt className="mr-4 text-[#1C98F7]" />
+          <FaTicketAlt className="mr-4" />
           Tickets
         </button>
         <button
-          // onClick={() => setCurrentComponent("CerrarSesion")}
           onClick={(e) => {
-            e.preventDefault(); 
-            logoutUser(); 
+            e.preventDefault();
+            logoutUser();
           }}
-          className="flex items-center py-2 font-Inter mb-6 text-base text-black hover:bg-[#004E89] hover:text-white"
+          className="flex items-center py-2 px-2 font-Inter text-lg text-[#FF4747] hover:bg-[#004E89] hover:text-white"
         >
-          <FaSignOutAlt className="mr-4 text-[#1C98F7]" />
+          <FaSignOutAlt className="mr-4" />
           Cerrar sesión
         </button>
-       
       </nav>
     </div>
   );

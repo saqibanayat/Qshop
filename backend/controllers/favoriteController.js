@@ -27,7 +27,13 @@ exports.addFavoriteProduct = async (req, res)=>{
       const user = req.user._id;
   
       // Retrieve all favorites for the user
-      const favorites = await FavoriteProduct.find({  userId:user, }).populate('productId');
+      const favorites = await FavoriteProduct.find({  userId:user, }).populate({
+        path: 'productId',
+        populate: {
+          path: 'category',
+          select: 'name',
+        },
+      });
       res.status(200).json({ success: true, data: favorites });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });

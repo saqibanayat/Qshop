@@ -64,6 +64,8 @@ exports.setproduct = async (req, res)=> {
         products,
       });
     } catch (error) {
+      console.log(error,'error');
+      
       return next(new ErrorHandler(error.message, 500));
     }
   };
@@ -71,16 +73,19 @@ exports.setproduct = async (req, res)=> {
   
  exports.getproductbyid= async (req, res, next)=> {
     try {
-      const product = await Product.findById(req.query.id);
+      const product = await Product.findById(req.query.id).populate('seller').populate('category','name')
 
       if (!product) {
         return next(new ErrorHandler("Product doesn't exists", 400));
       }
+   // Fetch total number of products by the same user
+   const userProductCount = await Product.countDocuments({ seller: product.seller._id });
 
-      res.status(200).json({
-        success: true,
-        product,
-      });
+   res.status(200).json({
+       success: true,
+       product,
+       userProductCount,
+   });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }

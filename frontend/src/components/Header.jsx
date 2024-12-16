@@ -135,7 +135,7 @@ const Header = () => {
             <FaHeart className="h-8 w-8 text-white" />
           </div>
           <h2 className="font-semibold text-lg text-white leading-5">
-            Favourite <br /> Items
+            Favourite <br /> Items1
           </h2>
         </div>
       </div>

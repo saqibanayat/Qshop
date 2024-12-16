@@ -41,6 +41,44 @@ export const loginApi = createAsyncThunk(
     }
   }
 );
+export const addFavoriteApi = createAsyncThunk(
+  'authentication/addFavoriteApi',
+  async (productId, thunkAPI) => {
+    try {
+      const res = await instance.post(`api/favorite/addfavorite`, {productId});
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getFavoriteApi = createAsyncThunk(
+  'authentication/getFavoriteApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/favorite/getfavorite`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const deleteFavoriteApi = createAsyncThunk(
+  'authentication/deleteFavoriteApi',
+  async (productId, thunkAPI) => {
+    try {
+      const res = await instance.delete(`api/favorite/removefavorite`, {
+        params:{productId}
+      });
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 
 
@@ -61,6 +99,7 @@ export const logoutApi = createAsyncThunk(
 const initialState = {
   isLoading: false,
   userData: {},
+  listOfFavoriteProducts:{},
   
   getSellerProductsList:{},
   message: '',
@@ -103,6 +142,20 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(logoutApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+   
+      .addCase(getFavoriteApi.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getFavoriteApi.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.listOfFavoriteProducts = action.payload;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(getFavoriteApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

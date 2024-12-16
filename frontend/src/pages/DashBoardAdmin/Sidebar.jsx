@@ -16,11 +16,13 @@ import { useNavigate } from "react-router-dom";
 import { logoutApi } from "../../Redux/slice/authSlice";
 import { toast } from "react-toastify";
 import { getSellerProfileApi } from "../../Redux/slice/sellerSlice";
+import { Navbarvalue } from "../../context/NavbarValuesContext";
 
-const AdminSidebar2 = ({ setCurrentComponent }) => {
+const AdminSidebar2 = () => {
   const [activeButton, setActiveButton] = useState("Profile"); // To track the active button
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {adminCurrentComponentHandler}=Navbarvalue()
   const{sellerProfileData}=useSelector((state)=>state.seller)
 
   const logoutUser = () => {
@@ -35,7 +37,7 @@ const AdminSidebar2 = ({ setCurrentComponent }) => {
 
   const handleButtonClick = (componentName) => {
     setActiveButton(componentName); // Set the active button
-    setCurrentComponent(componentName); // Set the current component
+    adminCurrentComponentHandler(componentName)
   };
 
     useEffect(() => {

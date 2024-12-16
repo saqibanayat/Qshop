@@ -5,10 +5,12 @@ import { FaHeart } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa6";
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { Navbarvalue } from "../context/NavbarValuesContext";
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-const {userData}=useSelector((state)=>state.user)
-console.log("🚀 ~ Header ~ userData:", userData?.user?.role)
+const {userData}=useSelector((state)=>state.user);
+const {adminCurrentComponentHandler}=Navbarvalue()
+
 const navigate= useNavigate()
 const selectDashboard=(e)=>{
   e.preventDefault()
@@ -189,7 +191,7 @@ else{
           <h2 className="font-semibold text-lg  text-white">Cart</h2>
         </div>
         </Link>
-        <div className="lg:flex hidden  items-center gap-3">
+        <div className="lg:flex hidden  items-center gap-3"   onClick={()=>{adminCurrentComponentHandler('Favorite')}}>
           <div>
             <FaHeart className="h-8 w-8 text-white" />
           </div>

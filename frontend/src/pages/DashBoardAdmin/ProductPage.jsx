@@ -26,14 +26,14 @@ const ProductPage = () => {
 
   useEffect(()=>{
 
-    dispatch(getProductsApi({seller:userData?.user?._id}))
+    dispatch(getProductsApi({seller:userData?.user?._id,category:categoryId}))
     .then((res)=>{
       if(res?.payload?.success===true){
         setproductList(res?.payload?.products)
       }
 
     })
-  },[])
+  },[categoryId])
   useEffect(() => {
     dispatch(getCategoriesApi())
     }, [])
@@ -55,9 +55,7 @@ const ProductPage = () => {
             placeholder="Search"
           />
         </div>
-        {/* <select className="bg-gray-100 rounded-lg shadow-lg p-2">
-          <option>Todas las categorías</option>
-        </select> */}
+       
                <TableDropdown
 
 items={listOfCategory}
@@ -76,12 +74,12 @@ selectionName='Select category'
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-blue-600 text-white">
-              <th className="py-2 px-4">ID Producto</th>
-              <th className="py-2 px-4">Nombre del producto</th>
-              <th className="py-2 px-4">Categoría</th>
-              <th className="py-2 px-4">Cantidad</th>
-              <th className="py-2 px-4">Precio</th>
-              <th className="py-2 px-4">Acción</th>
+              <th className="py-2 px-4 text-start">ID Producto</th>
+              <th className="py-2 px-4 text-start">Nombre del producto</th>
+              <th className="py-2 px-4 text-start">Categoría</th>
+              <th className="py-2 px-4 text-start">Cantidad</th>
+              <th className="py-2 px-4 text-start">Precio</th>
+              <th className="py-2 px-4 text-start">Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -90,7 +88,7 @@ selectionName='Select category'
               <tr key={index} className="border-t">
                 <td className="py-2 px-4">{product._id}</td>
                 <td className="py-2 px-4 text-blue-500">
-                <div className="flex justify-center items-center gap-2 ">
+                <div className="flex  items-center gap-2 ">
                  <img src={product?.images[0]} className="h-20" alt="" />    
                   <p>   {product?.name}</p>
                 </div>

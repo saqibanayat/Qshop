@@ -19,12 +19,16 @@ import Dashboard from "./Dashboard";
 import AddProducts from "./AddProducts";
 // import AdminSidebar2 from "./AdminSidebar2";
 import ProductPage from "./ProductPage";
+import { Navbarvalue } from "../../context/NavbarValuesContext";
+import Favorites from "./Favorites";
 
 const App = () => {
-  const [currentComponent, setCurrentComponent] = React.useState("Profile");
+    const {adminDashboardCurrentComponent}=Navbarvalue()
+    console.log("🚀 ~ App ~ adminDashboardCurrentComponent:", adminDashboardCurrentComponent)
+  
 
   const renderComponent = () => {
-    switch (currentComponent) {
+    switch (adminDashboardCurrentComponent) {
       case "Dashboard":
         return <Dashboard />;
       case "Profile":
@@ -33,6 +37,8 @@ const App = () => {
         return <AddProducts />;
       case "ProductPage":
         return <ProductPage />;
+      case "Favorite":
+        return <Favorites />;
 
       case "OrderPage":
         return <OrderPage />;
@@ -67,7 +73,7 @@ const App = () => {
     <div>
       <div className="flex flex-col md:flex-row bg-gray-200 space-y-6 md:space-y-0 md:space-x-6 md:p-8">
         <div className="md:w-1/5 w-full">
-          <Sidebar setCurrentComponent={setCurrentComponent} />
+          <Sidebar  />
         </div>
         <div className="md:w-4/5 w-full">{renderComponent()}</div>
       </div>

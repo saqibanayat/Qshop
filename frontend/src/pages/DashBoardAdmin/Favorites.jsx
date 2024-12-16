@@ -14,6 +14,7 @@ const Favorites = () => {
       <h1 className="text-[#1C98F7] font-Quicksand font-bold text-2xl md:text-4xl ">
         Favoritos
       </h1>
+      
       {/* search input */}
       <div className="flex flex-col  md:flex-row md:px-12 space-y-4 md:space-y-0 md:space-x-4 mt-4 md:mt-5">
         <div className="relative w-full md:w-1/2">

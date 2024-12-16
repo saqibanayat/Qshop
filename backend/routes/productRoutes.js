@@ -8,8 +8,8 @@ const { setproduct, getproductbyid, editProduct, deleteProduct, getProducts } = 
 
 
 router.post("/setproduct",isAuthenticatedSeller,upload.array('images', 4),setproduct);
-router.get("/getproduct",isAuthenticatedSeller,getProducts);
-router.get("/getproductbyid",isAuthenticatedSeller,getproductbyid);
+router.get("/getproduct",getProducts);
+router.get("/getproductbyid",getproductbyid);
 router.put('/editproduct', isAuthenticatedSeller, upload.array('images', 4),editProduct);
 router.delete('/deleteproduct', isAuthenticatedSeller, deleteProduct);
 

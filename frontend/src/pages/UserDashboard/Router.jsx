@@ -13,17 +13,17 @@ import Sellerinfo from "./Sellerinfo";
 import Paymentcards from "./Paymentcards";
 import Bitcoin from "./Bitcoin";
 import ShippingDetails from "./ShippingDetails";
+import { Navbarvalue } from "../../context/NavbarValuesContext";
 
 const App = () => {
 
-  const [currentComponent, setCurrentComponent] = React.useState("Profile");
 
- 
+    const {adminDashboardCurrentComponent}=Navbarvalue()
   const renderComponent = () => {
-    switch (currentComponent) {
+    switch (adminDashboardCurrentComponent) {
       case "Profile":
         return <Profile />;
-      case "Favorites":
+      case "Favorite":
         return <Favorites />;
       case "Orderstatus":
         return <Orderstatus />;
@@ -55,7 +55,7 @@ const App = () => {
      
       <div className="flex flex-col md:flex-row bg-gray-200 space-y-6 md:space-y-0 md:space-x-6 md:p-8">
         <div className="md:w-1/5 w-full">
-          <Sidebar setCurrentComponent={setCurrentComponent} />
+          <Sidebar  />
         </div>
         <div className="md:w-4/5 w-full">{renderComponent()}</div>
       </div>
