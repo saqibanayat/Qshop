@@ -15,7 +15,7 @@ import { RegistrationProvider } from "./context/RegistrationContext";
 import ProductDetail from "./pages/ProductDetail/Index";
 import ProductsList from "./pages/ProductsList/index";
 import ProductCompra from "./pages/ProductCompra/index";
-import EmptyCartPage from "./pages/EmptyCartPage";
+import CartPage from "./pages/EmptyCartPage";
 import AddAddress from "./pages/PaymentGateWay/AddAddress";
 import PaymentMethod from "./pages/PaymentGateWay/PaymentMethod";
 import NewAddress from "./pages/PaymentGateWay/NewAddress";
@@ -98,8 +98,8 @@ function App() {
 
           <Route path="/ProductDetail/:id" element={<ProductDetail />} />
 
-          <Route path="/emptycart" element={<EmptyCartPage />} />
-          <Route path="/cartwithitems" element={<CartWithItemsPage />} />
+          <Route path="/cart" element={<CartWithItemsPage />} />
+          {/* <Route path="/cartwithitems" element={<CartWithItemsPage />} /> */}
 
           <Route path="/PaymentGateWay" element={<AddAddress />} />
           <Route path="/PaymentGateWay/newaddress" element={<NewAddress />} />

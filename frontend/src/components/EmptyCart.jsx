@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCartListApi } from "../Redux/slice/buyerSlice";
 
 const EmptyCart = () => {
+  const dispatch = useDispatch()
+  const {ListOfCartItems}=useSelector((state)=>state.buyer)
+  console.log("🚀 ~ EmptyCart ~ ListOfCartItems:", ListOfCartItems)
+  useEffect(()=>{
+    dispatch(getCartListApi())
+  },[])
   return (
-    <div className="flex flex-col px-4 md:px-12 py-4 md:py-12 gap-4 md:gap-12 overflow-hidden">
+    <div className="flex  px-4 md:px-12 py-4 md:py-12 gap-4 md:gap-12 overflow-hidden">
       <div className="sm:w-full">
         <h1 className="text-2xl text-blue-400 pb-4">Tu carrito está vacío</h1>
 
@@ -75,7 +83,7 @@ const EmptyCart = () => {
           también compraron
         </p>
 
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className=" gap-4">
           <div className="flex mb-4 md:w-1/2">
             <div className="flex items-center gap-4">
               <div>

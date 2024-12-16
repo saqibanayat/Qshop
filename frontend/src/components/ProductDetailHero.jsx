@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {ReactComponent as DeliveryIcon} from '../assets/svg/delivery.svg'
-import {ReactComponent as cardIcon} from '../assets/svg/cardPayment.svg'
+import {ReactComponent as CardIcon} from '../assets/svg/cardPayment.svg'
 import {ReactComponent as ReturnDeliveryIcon} from '../assets/svg/returnDelivery.svg'
 import {ReactComponent as AuthenticProductIcon} from '../assets/svg/autenticProduct.svg'
 import {ReactComponent as ReviewStarIcon} from '../assets/svg/reviewStar.svg'
@@ -152,7 +152,7 @@ const YourComponent = ({ productDetail }) => {
                     </span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <cardIcon/>
+                    <CardIcon/>
 
                     <span className="font-normal text-base text-gray-900 ">
                       Pago seguro

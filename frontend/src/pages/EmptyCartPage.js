@@ -2,7 +2,7 @@ import React from 'react'
 import EmptyCart from '../components/EmptyCart'
 import RelatedMacProducts from '../components/RelatedMacProducts'
 
-const EmptyCartPage = () => {
+const CartPage = () => {
   return (
     <><EmptyCart />
     <RelatedMacProducts />
@@ -14,4 +14,4 @@ const EmptyCartPage = () => {
   )
 }
 
-export default EmptyCartPage
+export default CartPage

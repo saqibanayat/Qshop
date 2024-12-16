@@ -10,6 +10,8 @@ import { addFavoriteApi, getFavoriteApi } from "../Redux/slice/authSlice";
 import { toast } from "react-toastify";
 import iphoneImage from "../assets/homePage/ipone-image.png";
 import { useNavigate } from "react-router-dom";
+import {ReactComponent as CartIcon} from '../assets/svg/cart.svg'
+import { addToCartApi } from "../Redux/slice/buyerSlice";
 
 function SampleNextArrow(props) {
   const { onClick } = props;
@@ -103,6 +105,17 @@ const navigate = useNavigate()
     [dispatch, favCollection]
   );
 
+  const addToCartHandler=(id)=>{
+    const cartData ={productId:id,quantity:1}
+    dispatch(addToCartApi(cartData))
+    .then((res)=>{
+if(res?.payload?.success===true){
+  navigate("/cart")
+  toast.success('added Successfully!')
+}
+    })
+  }
+
   // Slick slider settings
   const settings = {
     dots: true,
@@ -159,7 +172,7 @@ navigate(`/ProductDetail/${id}`)
                     <FaStar className="h-5 w-5" />
                   </div>
                 </div>
-                <p className="text-gray-600">Color</p>
+               
                 <div className="flex space-x-2 my-2">
                   <div className="w-6 h-6 rounded-full bg-red-500"></div>
                   <div className="w-6 h-6 rounded-full bg-blue-500"></div>
@@ -170,8 +183,20 @@ navigate(`/ProductDetail/${id}`)
                 <div className="flex gap-x-5">
                   <p className="text-gray-600 line-through">S/500.00 PEN</p>
                   <p className="text-secondary font-bold">S/{item.price} PEN</p>
+                
                 </div>
-              </div>
+              </div> 
+               <div className="flex gap-3 mt-1">
+                                  <button className=" flex flex-row  gap-2 items-center justify-center rounded-lg bg-yellow-400 text-center text-2xl py-2 px-4 text-white">
+                                <CartIcon  onClick={()=>addToCartHandler(item._id)}/>
+                    
+                                 
+                                </button>
+                    
+                                <button className="  flex items-center justify-center rounded-lg bg-orange-400 text-center text-xl py-3 px-5 text-white ">
+                                Comprar
+                                </button>
+                  </div>
             </div>
           );
         })}

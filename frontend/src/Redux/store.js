@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import authReducer from './slice/authSlice';
 import pathReducer from './slice/pathSlice';
 import sellerReducer from './slice/sellerSlice';
+import buyerReducer from './slice/buyerSlice';
 // import surveyReducer from './slice/surveySlice';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
@@ -12,7 +13,7 @@ import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'survey','path','seller'], // Specify which reducers to persist
+  whitelist: ['user', 'survey','path','seller','buyer'], // Specify which reducers to persist
 };
 
 // Combine your reducers
@@ -20,7 +21,7 @@ const rootReducer = combineReducers({
   user: authReducer,
   path: pathReducer,
   seller:sellerReducer,
-  // survey: surveyReducer,
+  buyer: buyerReducer,
 });
 
 // Persist the combined reducer
