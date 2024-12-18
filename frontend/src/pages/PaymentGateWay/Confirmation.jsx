@@ -1,6 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { executePaymentApi, getSavedPaymentMethodApi, setOrder } from "../../Redux/slice/authSlice";
+import { getCartListApi, getUserProfileApi } from "../../Redux/slice/buyerSlice";
+import { toast } from "react-toastify";
 const Confirmation = () => {
+const dispatch = useDispatch()
+const [listOfPaymentMethods, setlistOfPaymentMethods] = useState([])
+ const{userProfileData,ListOfCartItems}=useSelector((state)=>state.buyer)
+
+ const dummyAddress = {
+  department: "IT",
+  province: "California",
+  street: "123 Main St",
+  district: "Central",
+  number: "456",
+  references: "Near Central Park"
+};
+
+const dummyItems = [
+  { _id: '675dc247ad6485df4eeb2b11', quantity: 2 }
+];
+
+
+
+  useEffect(() => {
+    dispatch(getSavedPaymentMethodApi())
+    .then((res)=>{
+console.log(res?.payload?.paymentMethods,'card payment ');
+setlistOfPaymentMethods(res?.payload?.paymentMethods)
+
+    })
+
+  }, [])
+ 
+  useEffect(() => {
+    dispatch(getUserProfileApi())
+    dispatch(getCartListApi())
+  }, [dispatch])
+ const paymentMethodId='pm_1QXTP7P8hIOKvXty7OxXimat'
+const customerid='cus_RQJxv9OVF3vjTv'
+
+ const handlePay = async () => {
+  try {
+    console.log("Creating PaymentIntent...");
+
+    const res1 = await dispatch(
+      setOrder({
+        items: dummyItems,
+        address: dummyAddress,
+        customerId:customerid,
+        paymentMethodId: paymentMethodId, // Attach PaymentMethod ID
+      })
+    );
+
+    const paymentIntentId = res1?.payload?.paymentIntent?.id;
+
+    if (!paymentIntentId) {
+      console.error("Failed to create PaymentIntent.");
+      toast.error("Error creating PaymentIntent. Please try again.");
+      return;
+    }
+
+    console.log("Confirming PaymentIntent...");
+
+    const res2 = await dispatch(
+      setOrder({
+        items: dummyItems,
+        address: dummyAddress,
+        customerId:customerid,
+        paymentIntentId:paymentIntentId,
+        paymentMethodId: paymentMethodId, // Attach PaymentMethod ID
+        confirmationStep: true,
+      })
+    );
+
+    if (res2?.payload?.success) {
+      toast.success("Payment succeeded and order placed!");
+    } else {
+      toast.error("Order confirmation failed.");
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+    toast.error("Payment execution failed. Please try again.");
+  }
+};
+
+
+  
+ 
   return (
     <div className="flex flex-col items-center justify-center py-12 relative overflow-hidden">
     <div className=" absolute top-16 py-2 sm:left-12 left-4 flex gap-8 items-center justify-center">
@@ -150,13 +238,15 @@ const Confirmation = () => {
                 <h1 className=" py-2">Dirección predeterminada</h1>
 
                 <h1>
-                  Bajada Marta Collazo 1 Puerta 839, La Libertad, San Pedro de
-                  Lloc, Peru.
+                
+                  {formatAddress(userProfileData?.user?.address)}
                 </h1>
               </div>
             </div>
-
-            <div className=" flex gap-12">
+{listOfPaymentMethods?.map((item,index)=>{
+  return(
+    <>
+    <div className=" flex gap-12 " id={index}>
               <svg
                 width="61"
                 height="62"
@@ -173,10 +263,15 @@ const Confirmation = () => {
               <div>
                 <h1 className=" py-2">Método de pago</h1>
 
-                <h1>Número de tarjeta: ***4598</h1>
-                <h1>MM / AA: 10/26</h1>
+                <h1>Número de tarjeta: ***{item?.last4}</h1>
+                <h1>MM / AA: {item?.exp_year}</h1>
+                <h1>marca:{item?.brand}</h1>
               </div>
             </div>
+    </>
+  )
+})}
+            
           </div>
         </div>
 
@@ -184,10 +279,13 @@ const Confirmation = () => {
           <h1 className=" text-blue-400 text-xl">Resumen de la compra</h1>
 
           <div className=" border-2 border-gray-400 p-4 my-4">
-            <h1>Productos (2)</h1>
-
-            <div className="flex gap-4 items-center justify-center py-4">
-              <svg
+            <h1>Productos ({ListOfCartItems.items?.length})</h1>
+{ListOfCartItems?.items?.map((item,index)=>{
+  return(
+    <>
+    <div className="flex gap-4 items-center justify-around py-4">
+      <img src={item?.product?.images[0]} width={90} alt="" />
+              {/* <svg
                 width="91"
                 height="67"
                 viewBox="0 0 91 67"
@@ -195,33 +293,17 @@ const Confirmation = () => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <rect width="91" height="67" rx="12" fill="#D9D9D9" />
-              </svg>
+              </svg> */}
 
-              <h1>Apple iMac MK442LL/A 21.5-...</h1>
+              <h1>{item?.product?.name}</h1>
 
-              <h1>S/3,500.00 PEN</h1>
+              <h1>S/{item?.product?.price} PEN</h1>
             </div>
-
-
-
-            <div className="flex gap-4 items-center justify-center py-4">
-              <svg
-                width="91"
-                height="67"
-                viewBox="0 0 91 67"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="91" height="67" rx="12" fill="#D9D9D9" />
-              </svg>
-
-              <h1>Apple iMac MK442LL/A 21.5-...</h1>
-
-              <h1>S/3,500.00 PEN</h1>
-            </div>
-
-
-
+    
+    </>
+  )
+})}
+            
 
             <div className=" flex items-center justify-center">
             <svg width="508" height="1" viewBox="0 0 508 1" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -239,7 +321,7 @@ const Confirmation = () => {
 
     <h1>Costo de envío:</h1>
 
-    <h1>S/100.00 PEN</h1>
+    <h1>S/0.00 PEN</h1>
 </div>
 
 <div className="flex justify-between items-center px-6 py-4">
@@ -247,7 +329,7 @@ const Confirmation = () => {
 
     <h1>Subtotal:</h1>
 
-    <h1>S/4,500.00 PEN</h1>
+    <h1>S/{ListOfCartItems?.totalPrice} PEN</h1>
 </div>
 
 
@@ -257,12 +339,12 @@ const Confirmation = () => {
 
     <h1>Total</h1>
 
-    <h1>S/4,600.00 PEN</h1>
+    <h1>S/{ListOfCartItems?.totalPrice} PEN</h1>
 </div>
 
 <div className=" flex items-center justify-center">
-            <Link to="/">
-              <button className="h-[48px] w-[350px] my-3 rounded-lg justify-center flex items-center bg-orange-400 text-center text-xl py-4 text-white">
+            <Link to="#">
+              <button onClick={handlePay} className="h-[48px] w-[350px] my-3 rounded-lg justify-center flex items-center bg-orange-400 text-center text-xl py-4 text-white">
               Pagar
               </button>
             </Link>
@@ -273,5 +355,18 @@ const Confirmation = () => {
     </div>
   );
 };
+function formatAddress(address) {
+  if (!address) return "Address not provided";
 
+  const { department, province, street, number, references } = address;
+
+  return [
+    department,
+    province,
+    street ? `${street} ${number || ""}`.trim() : undefined,
+    references,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
 export default Confirmation;

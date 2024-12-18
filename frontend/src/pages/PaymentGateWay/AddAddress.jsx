@@ -1,6 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {ReactComponent as AdressIcon} from '../../assets/svg/address.svg'
+import {ReactComponent as AddAdressIcon} from '../../assets/svg/addAddress.svg'
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfileApi } from "../../Redux/slice/buyerSlice";
+
 const AddAddress = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const{userProfileData}=useSelector((state)=>state.buyer)
+  useEffect(() => {
+    dispatch(getUserProfileApi())
+  }, [dispatch])
+  
   return (
     <div className="flex flex-col items-center justify-center py-12 relative overflow-hidden">
       <div className=" absolute top-16 py-2 sm:left-12 left-4 flex gap-8 items-center justify-center">
@@ -115,6 +127,8 @@ const AddAddress = () => {
       </svg>
       </div>
 
+
+{/* address listed here */}
       <h1 className=" text-3xl text-blue-400 py-6">Confirma tu dirección</h1>
 
       <h1>
@@ -122,92 +136,32 @@ const AddAddress = () => {
       </h1>
 
       <div>
+
         <div className="flex sm:gap-12 gap-4 py-6">
           <div className="my-2">
-            <svg
-              width="61"
-              height="55"
-              viewBox="0 0 61 55"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6.77778 3.4375C3.03941 3.4375 0 6.52051 0 10.3125V44.6875C0 48.4795 3.03941 51.5625 6.77778 51.5625H54.2222C57.9606 51.5625 61 48.4795 61 44.6875V10.3125C61 6.52051 57.9606 3.4375 54.2222 3.4375H6.77778ZM15.25 30.9375H22.0278C26.7087 30.9375 30.5 34.7832 30.5 39.5312C30.5 40.4766 29.7375 41.25 28.8056 41.25H8.47222C7.54028 41.25 6.77778 40.4766 6.77778 39.5312C6.77778 34.7832 10.5691 30.9375 15.25 30.9375ZM11.8611 20.625C11.8611 18.8016 12.5752 17.053 13.8463 15.7636C15.1174 14.4743 16.8413 13.75 18.6389 13.75C20.4365 13.75 22.1604 14.4743 23.4315 15.7636C24.7026 17.053 25.4167 18.8016 25.4167 20.625C25.4167 22.4484 24.7026 24.197 23.4315 25.4864C22.1604 26.7757 20.4365 27.5 18.6389 27.5C16.8413 27.5 15.1174 26.7757 13.8463 25.4864C12.5752 24.197 11.8611 22.4484 11.8611 20.625ZM38.9722 17.1875H52.5278C53.4597 17.1875 54.2222 17.9609 54.2222 18.9062C54.2222 19.8516 53.4597 20.625 52.5278 20.625H38.9722C38.0403 20.625 37.2778 19.8516 37.2778 18.9062C37.2778 17.9609 38.0403 17.1875 38.9722 17.1875ZM38.9722 24.0625H52.5278C53.4597 24.0625 54.2222 24.8359 54.2222 25.7812C54.2222 26.7266 53.4597 27.5 52.5278 27.5H38.9722C38.0403 27.5 37.2778 26.7266 37.2778 25.7812C37.2778 24.8359 38.0403 24.0625 38.9722 24.0625ZM38.9722 30.9375H52.5278C53.4597 30.9375 54.2222 31.7109 54.2222 32.6562C54.2222 33.6016 53.4597 34.375 52.5278 34.375H38.9722C38.0403 34.375 37.2778 33.6016 37.2778 32.6562C37.2778 31.7109 38.0403 30.9375 38.9722 30.9375Z"
-                fill="#1C98F7"
-              />
-            </svg>
+            <AdressIcon/>
           </div>
           <div>
             <h1 className=" py-2">Dirección predeterminada</h1>
 
             <h1>
-              Bajada Marta Collazo 1 Puerta 839, La Libertad, San Pedro de Lloc,
-              Peru.
+              {/* Bajada Marta Collazo 1 Puerta 839, La Libertad, San Pedro de Lloc,
+              Peru. */}
+              {formatAddress(userProfileData?.user?.address)}
             </h1>
           </div>
         </div>
 
-        <div className=" flex sm:gap-12 gap-4">
-          <svg
-            width="74"
-            height="75"
-            viewBox="0 0 74 75"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g filter="url(#filter0_d_1_5)">
-              <circle cx="37" cy="34" r="33" fill="white" />
-            </g>
-            <path
-              d="M37.918 33.7129H47.9766V37.0332H37.918V47.3848H34.5732V37.0332H24.5146V33.7129H34.5732V23.3125H37.918V33.7129Z"
-              fill="#1C98F7"
-            />
-            <defs>
-              <filter
-                id="filter0_d_1_5"
-                x="0"
-                y="1"
-                width="74"
-                height="74"
-                filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB"
-              >
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                <feColorMatrix
-                  in="SourceAlpha"
-                  type="matrix"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                  result="hardAlpha"
-                />
-                <feOffset dy="4" />
-                <feGaussianBlur stdDeviation="2" />
-                <feComposite in2="hardAlpha" operator="out" />
-                <feColorMatrix
-                  type="matrix"
-                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                />
-                <feBlend
-                  mode="normal"
-                  in2="BackgroundImageFix"
-                  result="effect1_dropShadow_1_5"
-                />
-                <feBlend
-                  mode="normal"
-                  in="SourceGraphic"
-                  in2="effect1_dropShadow_1_5"
-                  result="shape"
-                />
-              </filter>
-            </defs>
-          </svg>
+        <div className=" flex sm:gap-12 gap-4" >
+      <AddAdressIcon onClick={()=>navigate('/PaymentGateWay/newaddress')} className='cursor-pointer'/>
 
-          <h1 className=" flex items-center justify-center">
+          <h1 className=" flex items-center justify-center cursor-pointer" onClick={()=>navigate('/PaymentGateWay/newaddress')} >
             Agregar nueva dirección
           </h1>
         </div>
       </div>
 
-      <Link to='/PaymentGateWay/newaddress'>
+      <Link to='/PaymentGateWay/paymentmethod'>
         <button className="h-[64px] sm:w-[350px] w-[200px] my-3 rounded-lg justify-center flex items-center bg-orange-400 text-center text-xl py-4 text-white">
           Continuar
         </button>
@@ -216,4 +170,19 @@ const AddAddress = () => {
   );
 };
 
+
+function formatAddress(address) {
+  if (!address) return "Address not provided";
+
+  const { department, province, street, number, references } = address;
+
+  return [
+    department,
+    province,
+    street ? `${street} ${number || ""}`.trim() : undefined,
+    references,
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
 export default AddAddress;

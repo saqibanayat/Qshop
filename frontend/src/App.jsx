@@ -8,7 +8,7 @@ import ProductDetails from "./pages/ProductDetails/index";
 import HomePageV2 from "./pages/HomePageV2/Index";
 import UserForm from "./pages/ContactForm/UserForm";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { RegistrationProvider } from "./context/RegistrationContext";
 
@@ -34,12 +34,40 @@ import CartWithItemsPage from "./pages/CartWithItemsPage";
 import Profile from "./pages/UserDashboard/Router";
 import AdminDashBoard from "./pages/DashBoardAdmin/Router";
 import UserDashboard from "./pages/UserDashboard/Router";
-import { Routes, BrowserRouter, Route } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import PaymentRoutes from "./pages/PaymentGateWay/PaymentRoutes";
+import { useDispatch, useSelector } from "react-redux";
+import { setPath } from "./Redux/slice/pathSlice";
+function PathWatcher() {
+  const dispatch = useDispatch();
+  const location = useLocation();
 
+  useEffect(() => {
+    // Dispatch current path to Redux on route change
+    dispatch(setPath(location.pathname));
+  }, [location, dispatch]);
+
+  return null; // No UI rendering
+}
 function App() {
+  const navigate = useNavigate();
+  const currentPath = useSelector((state) => state.path.currentPath);
 
+  useEffect(() => {
+    // Navigate to the persisted path on app load
+    if (currentPath && currentPath !== window.location.pathname) {
+      navigate(currentPath);
+    }
+  }, [currentPath, navigate]);
+
+  // useEffect(() => {
+  //   if (!validRoutes.includes(currentPath)) {
+  //     navigate("/");
+  //   }
+  // }, [currentPath, navigate]);
   return (
-    <BrowserRouter>
+    <>
+     <PathWatcher />
       <Layout>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -127,7 +155,9 @@ function App() {
           theme="dark"
         />
       </Layout>
-    </BrowserRouter>
+    </>
+    
+ 
   );
 }
 

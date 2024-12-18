@@ -6,14 +6,14 @@ import authReducer from './slice/authSlice';
 import pathReducer from './slice/pathSlice';
 import sellerReducer from './slice/sellerSlice';
 import buyerReducer from './slice/buyerSlice';
-// import surveyReducer from './slice/surveySlice';
+import qshopReducer from './slice/qshopSlice';
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
 // Configuration for persisting the Redux state
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'survey','path','seller','buyer'], // Specify which reducers to persist
+  whitelist: ['user', 'survey','path','seller','buyer','qshop'], // Specify which reducers to persist
 };
 
 // Combine your reducers
@@ -22,6 +22,7 @@ const rootReducer = combineReducers({
   path: pathReducer,
   seller:sellerReducer,
   buyer: buyerReducer,
+  qshop:qshopReducer,
 });
 
 // Persist the combined reducer

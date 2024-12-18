@@ -183,7 +183,7 @@ else{
           <h2 className="font-semibold text-lg  text-white">{userData?.user ? userData?.user?.personalInfo?.firstName : 'Iniciar sesión'}</h2>
         </div>
         </Link>
-        <Link to='/cartwithitems'>
+        <Link to='/cart'>
         <div className="lg:flex hidden  items-center gap-3">
           <div>
             <FaCartPlus className="h-8 w-8 text-white" />

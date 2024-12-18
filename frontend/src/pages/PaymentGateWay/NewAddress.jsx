@@ -1,6 +1,43 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setUserProfileApi } from "../../Redux/slice/buyerSlice";
+import { toast } from "react-toastify";
 const NewAddress = () => {
+  const dispatch = useDispatch()
+const navigate = useNavigate()
+  const [newAddress, setnewAddress] = useState({
+    department:'',
+    province:'',
+    street:'',
+    district:'',
+    number:'',
+    reference:''
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+   
+    setnewAddress(prevState => ({
+      ...prevState,
+      [name]: value
+    }))}
+  const addNewAddress = (e)=>{
+    e.preventDefault()
+  
+    
+    const sendAddress = JSON.stringify(newAddress)
+      console.log(sendAddress);
+  const formData = new FormData();
+  formData.append('address',sendAddress)
+dispatch(setUserProfileApi(formData))
+.then((res)=>{
+if(res?.payload?.success===true){
+ navigate("/PaymentGateWay/paymentmethod")
+ toast.success('New Addess Added Successfully!')
+}
+})
+  }
   return (
     <div className="flex flex-col items-center justify-center py-12 relative overflow-hidden">
     <div className=" absolute top-16 py-2 sm:left-12 left-4 flex gap-8 items-center justify-center">
@@ -121,17 +158,26 @@ const NewAddress = () => {
       <h1 className="pb-4">
         Agrega la dirección dónde deseas recibir tus productos
       </h1>
-      <div className="px-5 pb-5">
+      <form onSubmit={addNewAddress}>
+          <div className="px-5 pb-5">
         <div className="flex">
           <div className=" w-[350px] pr-2">
             <input
+            name="department"
+            value={newAddress?.department}
+            onChange={handleInputChange}
               placeholder="Departamento"
+              required
               className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
             />
           </div>
           <div className="w-[250px]">
             <input
+             name="province"
+             value={newAddress?.province}
+             onChange={handleInputChange}
               placeholder="Provincia"
+              required
               className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
             />
           </div>
@@ -140,19 +186,31 @@ const NewAddress = () => {
         <div className="flex">
           <div className=" w-[225px] pr-2">
             <input
+             name="district"
+             value={newAddress?.district}
+             onChange={handleInputChange}
               placeholder="Distrito"
+              required
               className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200  focus:border-blueGray-500 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
             />
           </div>
           <div className="w-[225px] pr-2">
             <input
+             name="street"
+             value={newAddress?.street}
+             onChange={handleInputChange}
               placeholder="Avenida / Calle / Jirón"
+              required
               className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
             />
           </div>
           <div className="w-[150px]">
             <input
+             name="number"
+             value={newAddress?.number}
+             onChange={handleInputChange}
               placeholder="Número"
+               required
               className=" text-black placeholder-gray-600 w-full px-4 py-2.5 mt-2 text-base   transition duration-500 ease-in-out transform border-transparent rounded-lg bg-gray-200 focus:outline-none focus:shadow-outline focus:ring-2 ring-offset-current ring-offset-2 ring-gray-400"
             />
           </div>
@@ -161,7 +219,10 @@ const NewAddress = () => {
         <textarea
           id="description"
           placeholder="Referencias"
-          name="description"
+        
+          name="reference"
+          value={newAddress?.reference}
+          onChange={handleInputChange}
           rows="4"
           className="mt-2 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-gray-200 sm:text-sm"
         ></textarea>
@@ -169,11 +230,13 @@ const NewAddress = () => {
         <h1 className="py-2">Establecer dirección predeterminada</h1>
       </div>
 
-      <Link to="/PaymentGateWay/paymentmethod">
-        <button className="h-[64px] w-[350px] my-3 rounded-lg justify-center flex items-center bg-orange-400 text-center text-xl py-4 text-white">
+      
+        <button type='submit'className="h-[64px] w-[350px] my-3 rounded-lg justify-center flex items-center bg-orange-400 text-center text-xl py-4 text-white">
           Continuar
         </button>
-      </Link>
+      </form>
+    
+      
     </div>
   );
 };

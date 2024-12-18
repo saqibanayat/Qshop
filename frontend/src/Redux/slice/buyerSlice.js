@@ -39,11 +39,39 @@ export const removeCartItemApi = createAsyncThunk(
     }
   }
 );
+export const getUserProfileApi = createAsyncThunk(
+  'authentication/getUserProfileApi',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/user/getuserprofile`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const setUserProfileApi = createAsyncThunk(
+  'authentication/setUserProfileApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.post(`api/user/setuserprofile`,data, {
+        headers: { 
+          'Content-Type': 'application/form-data' 
+         }});
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 
 const initialState = {
   isLoading: false,
  ListOfCartItems:{},
+ userProfileData:{},
   message: '',
   error: null,
 };
@@ -74,6 +102,21 @@ const buyerSlice = createSlice({
       })
       
       .addCase(getCartListApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+
+      .addCase(getUserProfileApi.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserProfileApi.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userProfileData = action.payload;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      
+      .addCase(getUserProfileApi.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

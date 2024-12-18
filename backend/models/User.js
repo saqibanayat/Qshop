@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
     cellular: String,
     documentType: String,
     dni: String,
+    profilePicture: {
+      type: String 
+    },
   },
   address: {
     department: String,
@@ -26,6 +29,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  stripeCustomerId: { type: String },
+  stripePaymentMethod:{type:String},
   createdAt:{
     type: Date,
     default: Date.now(),

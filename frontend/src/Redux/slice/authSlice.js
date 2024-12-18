@@ -79,6 +79,78 @@ export const deleteFavoriteApi = createAsyncThunk(
     }
   }
 );
+export const setOrder = createAsyncThunk(
+  'authentication/setOrder',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.post(`api/order/setorder`, data);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const createStripeCustormerApi = createAsyncThunk(
+  'authentication/createStripeCustormerApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.post(`api/order/create-stripe-customer`, data);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const createSetupIntentApi = createAsyncThunk(
+  'authentication/createSetupIntentApi',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/order/create-setup-intent`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const savePaymentMethodApi = createAsyncThunk(
+  'authentication/createSetupIntentApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.post(`api/order/save-payment-method`,data);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getSavedPaymentMethodApi = createAsyncThunk(
+  'authentication/getSavedPaymentMethodApi',
+  async (_, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.get(`api/order/get-saved-payment-method`);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const executePaymentApi = createAsyncThunk(
+  'authentication/executePaymentApi',
+  async (data, thunkAPI) => {
+    try {
+      const res = await axiosPrivate.post(`api/order/execute-payment`,data);
+      return res.data;
+    } catch (error) {
+      const message = error.response?.data?.alertMessage || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 
 
@@ -156,6 +228,19 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(getFavoriteApi.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || action.error.message;
+      })
+   
+      .addCase(setOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(setOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+        state.error = null;
+      })
+      .addCase(setOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || action.error.message;
       })

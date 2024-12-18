@@ -229,6 +229,98 @@ const router = express.Router();
   }
 }
 
+
+
+ exports.getUserProfile= async (req, res, next)=> {
+  try {
+    const user = req.user._id;
+    const userProfile = await User.findById(user);
+    const {personalInfo,email,address}=userProfile;
+    const { firstName ,lastName,cellular,profilePicture}=personalInfo;
+    if (!userProfile) {
+      return next(new ErrorHandler("User doesn't exists", 400));
+    }
+
+    res.status(200).json({
+      success: true,
+      user:{
+        firstName,
+        lastName,
+        email,
+        cellular,
+        address,
+        profilePicture
+      }
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+}
+
+
+
+
+exports.setUserProfile = async (req, res) => {
+  const { firstName, lastName, cellular, image, password } = req.body;
+  const userId = req.user._id;
+
+  // Parse the address field (if present) into an object
+  let address = {};
+  if (req.body.address) {
+    try {
+      address = JSON.parse(req.body.address);
+    } catch (error) {
+      return res.status(400).json({ msg: 'Invalid address format' });
+    }
+  }
+
+  // Validation for required fields
+  if (!userId) {
+    return res.status(400).json({ msg: 'User ID is required' });
+  }
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Update user details
+    if (firstName !== undefined) user.personalInfo.firstName = firstName;
+    if (lastName !== undefined) user.personalInfo.lastName = lastName;
+    if (cellular !== undefined) user.personalInfo.cellular = cellular;
+    if (image !== undefined) user.personalInfo.profilePicture = image;
+
+    if (password !== undefined) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    // Update address fields if present
+    if (address.department !== undefined) user.address.department = address.department;
+    if (address.province !== undefined) user.address.province = address.province;
+    if (address.street !== undefined) user.address.street = address.street;
+    if (address.district !== undefined) user.address.street = address.district;
+    if (address.number !== undefined) user.address.number = address.number;
+    if (address.references !== undefined) user.address.references = address.references;
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+    });
+  } catch (error) {
+    console.error('Server error:', error.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+
+
  exports.getcart = async (req, res)=> {
   try {
     const cart = await getCart(req.user);

@@ -3,13 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCartApi, getCartListApi, removeCartItemApi } from "../Redux/slice/buyerSlice";
 import { IoIosAdd } from "react-icons/io";
 import { FiMinus } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 const CartWithItems = () => {
   const dispatch = useDispatch()
+  const navigate= useNavigate()
   const {ListOfCartItems}=useSelector((state)=>state.buyer)
   useEffect(()=>{
     dispatch(getCartListApi())
   },[])
 
+  
   const MinusQuantity=(id,quantity)=>{
     dispatch(removeCartItemApi({productId:id,quantity}))
     .then(()=>{
@@ -129,8 +132,8 @@ const CartWithItems = () => {
           <h1 className="text-xl text-blue-400">S/{ListOfCartItems?.totalPrice ||0} PEN</h1>
         </div>
 
-        <button className="w-full bg-blue-400 text-white text-lg py-3 mb-6 mt-6 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">
-          Pagar ahora
+        <button onClick={()=>{navigate('/PaymentGateWay')}} className="w-full bg-[#FF9900] text-white text-lg py-3 mb-6 mt-6 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        Proceder al pago
         </button>
       </div>
     </div>
